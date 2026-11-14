@@ -1,7 +1,6 @@
-import { getFarm } from '../storage.js';
+import { getFarm, saveWeather } from '../storage.js';
 import { fetchNasaPower } from '../nasa-api.js';
 import { drawWeatherChart } from '../chart.js';
-import { getFarm, saveWeather } from '../storage.js';
 
 const $ = s => document.querySelector(s);
 
@@ -59,29 +58,3 @@ $('#fetchNasaBtn').addEventListener('click', async () => {
     btn.disabled = false;
   }
 });
-
-
-const WEATHER_KEY = 'verdeai_weather_v1';
-
-export function saveWeather(farm, weather) {
-  localStorage.setItem(WEATHER_KEY, JSON.stringify({
-    lat: Number(farm.lat),
-    lon: Number(farm.lon),
-    weather
-  }));
-}
-
-export function getWeather(farm) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(WEATHER_KEY));
-
-    if (saved?.lat === Number(farm.lat) &&
-        saved.lon === Number(farm.lon)) {
-      return saved.weather;
-    }
-  } catch {
-    // The farmer can fetch a fresh result from Weather Analysis.
-  }
-
-  return null;
-}

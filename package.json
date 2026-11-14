@@ -1,0 +1,26 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "verde",
+  "version": "1.0.0",
+  "description": "Open the folder in VS Code. Use the Live Server extension on `index.html`, or run `python -m http.server 5500` in this folder and visit http://localhost:5500/. Do not use file:// for JavaScript modules.",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mirabhain/Verde.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mirabhain/Verde/issues"
+  },
+  "homepage": "https://github.com/Mirabhain/Verde#readme",
+  "dependencies": {
+    "dotenv": "^18.0.10",
+    "express": "^5.3.0",
+    "openai": "^7.57.0"
+  }
+}
