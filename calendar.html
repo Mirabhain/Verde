@@ -1,1 +1,82 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Farm Calendar | VerdeAI</title><link rel="stylesheet" href="css/style.css"></head><body><header class="topbar"><a class="brand" href="index.html"><span class="logo">✦</span><b>VerdeAI</b><small>Malaysia Edition</small></a><nav><a href="index.html">Home</a><a href="index.html#how">How it works</a><a href="dashboard.html">Dashboard</a><a href="login.html" id="accountLink">Log in / Sign up</a></nav></header><main class="section workspace"><div class="workspace-heading"><div><span class="eyebrow">VerdeAI Workspace</span><h2>Farm Calendar</h2></div><span id="userStatus" class="muted">Local demo session</span></div><div class="layout"><aside class="sidebar"><a class="nav-btn" href="dashboard.html">▦ Dashboard</a><a class="nav-btn" href="farm.html">⌖ My Farm</a><a class="nav-btn" href="rotation.html">↻ Crop Rotation</a><a class="nav-btn" href="soil.html">◈ Soil Analysis</a><a class="nav-btn" href="weather.html">☁ Weather Analysis</a><a class="nav-btn" href="calendar.html">▣ Farm Calendar</a></aside><div class="content"><section class="page active"><h3>Farm calendar</h3><p class="muted">Track activities and notes. Dates are entered by you, not automatically optimized by NASA.</p><form class="task-form" id="taskForm"><input name="date" required="" type="date"/><input maxlength="100" name="task" placeholder="e.g. Soil sampling" required=""/><button class="primary">Add activity</button></form><div id="taskList"></div></section></div></div></main><footer>© VerdeAI · NASA POWER climate observations <span>Decision-support prototype, not a replacement for agricultural advice.</span></footer><script type="module" src="js/common.js"></script><script type="module" src="js/pages/calendar.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Farm Calendar | VerdeAI</title>
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <span class="logo">✦</span>
+        <b>VerdeAI</b>
+        <small>Malaysia Edition</small>
+      </a>
+
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="index.html#how">How it works</a>
+        <a href="dashboard.html">Dashboard</a>
+        <a href="login.html" id="accountLink">Log in / Sign up</a>
+      </nav>
+    </header>
+
+    <main class="section workspace">
+      <div class="workspace-heading">
+        <div>
+          <span class="eyebrow">VerdeAI Workspace</span>
+          <h2>Farm Calendar</h2>
+        </div>
+
+        <span id="userStatus" class="muted">Local demo session</span>
+      </div>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <a class="nav-btn" href="dashboard.html">▦ Dashboard</a>
+          <a class="nav-btn" href="farm.html">⌖ My Farm</a>
+          <a class="nav-btn" href="rotation.html">↻ Crop Rotation</a>
+          <a class="nav-btn" href="soil.html">◈ Soil Analysis</a>
+          <a class="nav-btn" href="weather.html">☁ Weather Analysis</a>
+          <a class="nav-btn" href="calendar.html">▣ Farm Calendar</a>
+        </aside>
+
+        <div class="content">
+          <section class="page active">
+            <h3>Farm calendar</h3>
+
+            <p class="muted">
+              Track activities and notes. Dates are entered by you, not
+              automatically optimized by NASA.
+            </p>
+
+            <form class="task-form" id="taskForm">
+              <input name="date" required="" type="date" />
+
+              <input
+                maxlength="100"
+                name="task"
+                placeholder="e.g. Soil sampling"
+                required=""
+              />
+
+              <button class="primary">Add activity</button>
+            </form>
+
+            <div id="taskList"></div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      © VerdeAI · NASA POWER climate observations
+      <span>Decision-support prototype, not a replacement for agricultural advice.</span>
+    </footer>
+
+    <script type="module" src="js/common.js"></script>
+    <script type="module" src="js/pages/calendar.js"></script>
+  </body>
+</html>
