@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none" role="img" aria-label="VerdeAI">
+  <!-- back leaf: outline -->
+  <path d="M8 38C6 22 14 9 31 6c3 15-4 29-23 32Z" stroke="#ffffff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M10 36C16 26 22 19 29 12" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- front leaf: solid green -->
+  <path d="M20 42c-1-11 5-20 20-22 1 11-4 20-20 22Z" fill="#3fb24d"/>
+  <path d="M22 40c4-6 9-11 15-15" stroke="#10223c" stroke-width="1.8" stroke-linecap="round"/>
+</svg>
