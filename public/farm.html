@@ -1,193 +1,64 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>My Farm | VerdeAI</title>
-    <link rel="stylesheet" href="/css/style.css">
-  </head>
-
-  <body>
-    <header class="topbar">
-      <a class="brand" href="index.html">
-        <img class="logo" src="img/logo.svg" alt="" width="40" height="40">
-        <b>VerdeAI</b>
-        <small>Malaysia Edition</small>
-      </a>
-
-      <nav>
-        <a href="/">Home</a>
-        <a href="/#how">How it works</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/login" id="accountLink">Log in / Sign up</a>
-      </nav>
-    </header>
-
-    <main class="section workspace">
-      <div class="workspace-heading">
-
-        <div id="chatMessages">
-            <div class="message assistant">
-                Salam! I'm VerdeAI. How can I help with your farm today?
-            </div>
-        </div>
-
-        <form id="chatForm">
-            <input
-                type="text"
-                id="chatInput"
-                placeholder="Ask about crop rotation..."
-                required
-            />
-
-            <button type="submit">Send</button>
-        </form>
-
-        <script src="/js/script.js"></script>
-
-
-        <span id="userStatus" class="muted">Local demo session</span>
-      </div>
-
-      <div class="layout">
-        <aside class="sidebar">
-          <a class="nav-btn" href="/dashboard">▦ Dashboard</a>
-          <a class="nav-btn" href="/farm">⌖ My Farm</a>
-          <a class="nav-btn" href="/rotation">↻ Crop Rotation</a>
-          <a class="nav-btn" href="/soil">◈ Soil Analysis</a>
-          <a class="nav-btn" href="/weather">☁ Weather Analysis</a>
-          <a class="nav-btn" href="/calendar">▣ Farm Calendar</a>
-          <a class="nav-btn" href="/verdeai">◕ VerdeAI </a>
-        </aside>
-
-        <div class="content">
-          <section class="page active">
-            <h3>My Farm</h3>
-
-            <p class="muted">
-              Edit your farm details. Coordinates are needed to retrieve NASA
-              POWER observations.
-            </p>
-
-            <form class="form-grid" id="farmForm">
-              <label>
-                Farm name
-                <input maxlength="60" name="name" required=""/>
-              </label>
-
-              <label>
-                Latitude (−90 to 90)
-                <input
-                  max="90"
-                  min="-90"
-                  name="lat"
-                  required=""
-                  step="any"
-                  type="number"
-                />
-              </label>
-
-              <label>
-                Longitude (−180 to 180)
-                <input
-                  max="180"
-                  min="-180"
-                  name="lon"
-                  required=""
-                  step="any"
-                  type="number"
-                />
-              </label>
-
-              <label>
-                Land size (hectares)
-                <input
-                  min="0.01"
-                  name="size"
-                  required=""
-                  step="0.01"
-                  type="number"
-                />
-              </label>
-
-              <label>
-                Current crop
-                <select id="cropSelect" name="crop"></select>
-              </label>
-
-              <label>
-                Previous crop
-                <select id="previousSelect" name="previous"></select>
-              </label>
-
-              <label>
-                Soil type
-                <select name="soil">
-                  <option>Loam</option>
-                  <option>Clay</option>
-                  <option>Sandy</option>
-                  <option>Unknown</option>
-                </select>
-              </label>
-
-              <label>
-                Soil pH (optional)
-                <input
-                  max="14"
-                  min="0"
-                  name="ph"
-                  placeholder="e.g. 6.2"
-                  step="0.1"
-                  type="number"
-                />
-              </label>
-
-              <label>
-                Irrigation
-                <select name="irrigation">
-                  <option>Rain-fed</option>
-                  <option>Drip</option>
-                  <option>Sprinkler</option>
-                  <option>Flood</option>
-                </select>
-              </label>
-
-              <label>
-                Fertilizer use
-                <select name="fertilizer">
-                  <option>Unknown</option>
-                  <option>None</option>
-                  <option>Organic</option>
-                  <option>Synthetic</option>
-                  <option>Both</option>
-                </select>
-              </label>
-
-              <label>
-                Primary goal
-                <select name="goal">
-                  <option value="diversity">Crop diversity</option>
-                  <option value="water">Save water</option>
-                  <option value="nitrogen">Potential nitrogen contribution</option>
-                </select>
-              </label>
-
-              <div class="form-actions">
-                <button class="primary" type="submit">Save farm profile</button>
-                <span id="farmMessage" role="status"></span>
-              </div>
-            </form>
-          </section>
-        </div>
-      </div>
-    </main>
-
-    <footer>
-      © VerdeAI · NASA POWER climate observations
-      <span>Decision-support prototype, not a replacement for agricultural advice.</span>
-    </footer>
-
-    <script type="module" src="/js/common.js"></script>
-    <script type="module" src="/js/pages/farm.js"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My farm | VerdeAI</title>
+<link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+</head>
+<body class="app">
+<div id="content">
+<div class="page-head">
+  <div><h1>My farm</h1><p>Tell VerdeAI about your land. Click the map to drop a pin: NASA data is fetched for that exact spot.</p></div>
+</div>
+<form id="farmForm" class="grid" novalidate>
+  <section class="panel">
+    <h2>Location</h2>
+    <div id="map" role="application" aria-label="Map: click to place your farm"></div>
+    <div class="form-grid" style="margin-top:16px">
+      <label>Farm name<input name="name" required maxlength="80" placeholder="Kebun Pak Mat, Kuantan"></label>
+      <label>State
+        <select name="state">
+          <option value="">Select state</option><option>Johor</option><option>Kedah</option><option>Kelantan</option><option>Melaka</option><option>Negeri Sembilan</option><option>Pahang</option><option>Perak</option><option>Perlis</option><option>Pulau Pinang</option><option>Sabah</option><option>Sarawak</option><option>Selangor</option><option>Terengganu</option><option>Kuala Lumpur</option><option>Putrajaya</option><option>Labuan</option>
+        </select>
+      </label>
+      <label>Latitude<input name="lat" type="number" step="any" min="-90" max="90" required placeholder="3.8077"></label>
+      <label>Longitude<input name="lon" type="number" step="any" min="-180" max="180" required placeholder="103.3260"></label>
+      <div class="full"><button class="btn btn-outline btn-sm" type="button" id="locateBtn">Use my current location</button></div>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>Land and crops</h2>
+    <div class="form-grid">
+      <label>Land size (hectares)<input name="size" type="number" step="any" min="0.01" required placeholder="1.5"></label>
+      <label>Soil type
+        <select name="soil"><option value="">Not sure</option><option>Sandy</option><option>Sandy loam</option><option>Loam</option><option>Clay loam</option><option>Clay</option><option>Peat</option></select>
+      </label>
+      <label>Current crop<select name="crop" id="cropSelect" required></select></label>
+      <label>Previous crop<select name="previous" id="previousSelect"></select></label>
+      <label>Soil pH (if you tested it)<input name="ph" type="number" step="0.1" min="0" max="14" placeholder="Leave empty if unknown"></label>
+      <label>Irrigation
+        <select name="irrigation"><option>Rain-fed</option><option>Drip</option><option>Sprinkler</option><option>Furrow or canal</option></select>
+      </label>
+      <label>Fertiliser used
+        <select name="fertilizer"><option>None</option><option>Compost or manure</option><option>Chemical NPK</option><option>Chemical and organic</option></select>
+      </label>
+      <label>Crop care
+        <select name="care"><option>Low input</option><option>Moderate</option><option>Intensive</option><option>Organic</option></select>
+      </label>
+      <label class="full">Your main priority
+        <select name="goal"><option value="diversity">Diversify crops</option><option value="water">Save water</option><option value="nitrogen">Add nitrogen to the soil</option><option value="pest">Reduce pests and disease</option></select>
+      </label>
+    </div>
+  </section>
+  <div id="farmMessage" role="status"></div>
+  <div><button class="btn btn-primary" type="submit" id="saveFarmBtn">Save farm</button></div>
+</form>
+<script src="/vendor/leaflet/leaflet.js"></script>
+</div>
+<script src="/vendor/chart.umd.js"></script>
+<script type="module" src="/js/pages/farm.js"></script>
+</body>
 </html>

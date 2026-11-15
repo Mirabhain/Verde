@@ -1,33 +1,36 @@
-// Guest-only localStorage. NOT real authentication or a cloud database.
-const FARM_KEY='verdeai_farm_v1', TASK_KEY='verdeai_tasks_v1';
-export const defaultFarm={name:'Sample farm',lat:3.139,lon:101.687,size:1,crop:'chili',previous:'chili',soil:'Loam',ph:'',irrigation:'Rain-fed',fertilizer:'Unknown',goal:'diversity'};
-export function getFarm(){try{return {...defaultFarm,...JSON.parse(localStorage.getItem(FARM_KEY)||'{}')}}catch{return {...defaultFarm}}}
-export function saveFarm(farm){localStorage.setItem(FARM_KEY,JSON.stringify(farm))}
-export function getTasks(){try{return JSON.parse(localStorage.getItem(TASK_KEY)||'[]')}catch{return []}}
-export function saveTasks(tasks){localStorage.setItem(TASK_KEY,JSON.stringify(tasks))}
+// Farm profile + tasks. The server (per account) is the source of truth;
+// localStorage is only a fast per-user cache so pages render instantly.
+import { api } from './api.js';
 
+let uid = 'guest';
+export const setActiveUser = (id) => { uid = id; };
+const k = (name) => `verdeai_${uid}_${name}`;
+const read = (name, fallback) => { try { return JSON.parse(localStorage.getItem(k(name)) ?? 'null') ?? fallback; } catch { return fallback; } };
+const write = (name, v) => { try { localStorage.setItem(k(name), JSON.stringify(v)); } catch { /* quota */ } };
 
-const WEATHER_KEY = 'verdeai_weather_v1';
+export const getFarm = () => read('farm', null);
+export const getTasks = () => read('tasks', []);
 
-export function saveWeather(farm, weather) {
-  localStorage.setItem(WEATHER_KEY, JSON.stringify({
-    lat: Number(farm.lat),
-    lon: Number(farm.lon),
-    weather
-  }));
+export async function pullProfile() {
+  const p = await api('/api/profile');
+  write('farm', p.farm);
+  write('tasks', p.tasks || []);
+  return p;
 }
 
-export function getWeather(farm) {
-  try {
-    const saved = JSON.parse(localStorage.getItem(WEATHER_KEY));
+export async function saveFarm(farm) {
+  const saved = await api('/api/profile', { method: 'PUT', body: { farm } });
+  write('farm', saved.farm);
+  return saved.farm;
+}
 
-    if (saved?.lat === Number(farm.lat) &&
-        saved.lon === Number(farm.lon)) {
-      return saved.weather;
-    }
-  } catch {
-    // The farmer can fetch a fresh result from Weather Analysis.
-  }
+export async function saveTasks(tasks) {
+  const saved = await api('/api/profile', { method: 'PUT', body: { tasks } });
+  write('tasks', saved.tasks);
+  return saved.tasks;
+}
 
-  return null;
+export function clearLocal() {
+  Object.keys(localStorage).filter((x) => x.startsWith('verdeai_')).forEach((x) => localStorage.removeItem(x));
+  Object.keys(sessionStorage).filter((x) => x.startsWith('verdeai_')).forEach((x) => sessionStorage.removeItem(x));
 }

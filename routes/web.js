@@ -1,13 +1,10 @@
 import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const router = express.Router();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Map URL paths to HTML files
 const pages = {
     "/": "index.html",
     "/index": "index.html",
@@ -27,15 +24,12 @@ const pages = {
     "/weather": "weather.html",
     "/weather.html": "weather.html",
     "/verdeai": "verdeai.html",
-    "/verdeai.ai": "verdeai.html"
+    "/verdeai.html": "verdeai.html"
 };
 
-// Register page routes
 for (const [route, file] of Object.entries(pages)) {
     router.get(route, (req, res) => {
-        res.sendFile(
-            path.join(__dirname, "../public", file)
-        );
+        res.sendFile(path.join(__dirname, "../public", file));
     });
 }
 

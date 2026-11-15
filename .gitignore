@@ -1,8 +1,7 @@
-
 # Environment variables (API keys and secrets)
 .env
 .env.*
-        
+
 # Allow example environment configuration
 !.env.example
 
