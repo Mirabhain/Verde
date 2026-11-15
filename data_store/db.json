@@ -9,6 +9,16 @@
       "createdAt": "2026-11-15T02:14:11.712Z",
       "farm": null,
       "tasks": []
+    },
+    {
+      "id": "4eb3e3f7-1b1a-4478-a37d-d41f90f2e514",
+      "name": "raden",
+      "email": "raden@email.com",
+      "salt": "10078709c24fb73f2db6b8f93cfa53ca",
+      "hash": "052f634422b54585365de3a5bda8a3c63783ebd85781790109dad7f04b74d821039ca3e5edd7223e59abcef40fd21905f49336b47ab5ad367d693d297f28778b",
+      "createdAt": "2026-11-15T07:41:37.746Z",
+      "farm": null,
+      "tasks": []
     }
   ]
 }

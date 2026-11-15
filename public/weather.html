@@ -50,6 +50,9 @@
         </aside>
 
         <div class="content">
+          <!-- ADDED: shows any data loading errors -->
+          <div id="weatherErrors"></div>
+
           <!-- Primary NASA Agro-weather Metrics -->
           <div class="stat-grid" id="nasaMetrics">
             <div class="panel-card"><div class="skeleton" style="height:70px"></div></div>
@@ -93,6 +96,17 @@
             </div>
           </section>
 
+          <!-- ADDED: humidity and solar radiation chart -->
+          <section class="panel" style="margin-bottom:20px">
+            <div style="margin-bottom:12px">
+              <h3 style="font-size:20px;margin:0 0 4px 0">Humidity & Solar Radiation</h3>
+              <p class="muted" style="font-size:14px">Daily mean relative humidity and surface solar radiation (NASA POWER).</p>
+            </div>
+            <div style="height:240px">
+              <canvas id="chartHum" aria-label="Humidity and Solar Radiation Chart"></canvas>
+            </div>
+          </section>
+
           <!-- 14-day Observation Table -->
           <section class="panel" style="margin-bottom:20px">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
@@ -120,6 +134,27 @@
             <p class="fine" id="weatherNote" style="margin-top:10px"></p>
           </section>
 
+          <!-- ADDED: 7-day forecast table -->
+          <section class="panel" style="margin-bottom:20px">
+            <div style="margin-bottom:12px">
+              <h3 style="font-size:20px;margin:0 0 4px 0">Forecast (Next 7 Days)</h3>
+              <p class="muted" style="font-size:14px">Short range forecast from Open-Meteo. NASA POWER does not provide forecasts.</p>
+            </div>
+            <div style="overflow-x:auto">
+              <table class="data-table" id="forecastTable">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Min / Max</th>
+                    <th>Rainfall</th>
+                    <th>Rain Chance</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </section>
+
           <!-- Satellite View & Vegetation Health -->
           <section class="panel">
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
@@ -131,6 +166,12 @@
             </div>
             <div id="map" class="nasa-map"></div>
           </section>
+
+          <!-- ADDED: exact JSON returned by the APIs -->
+          <details class="panel" style="margin-top:20px">
+            <summary>Raw API response</summary>
+            <pre id="rawJson" class="raw-json"></pre>
+          </details>
         </div>
       </div>
     </main>

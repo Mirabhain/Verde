@@ -1,8 +1,112 @@
+
+const OPEN_METEO = "https://api.open-meteo.com/v1";
+const memoCache = new Map();
+
+async function memo(key, ttlMs, load) {
+  const hit = memoCache.get(key);
+  if (hit && Date.now() - hit.at < ttlMs) return hit.data;
+  const data = await load();
+  memoCache.set(key, { at: Date.now(), data });
+  return data;
+}
+
+async function getJson(url, label) {
+  const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+  if (!res.ok) throw new Error(`${label} request failed (${res.status})`);
+  return res.json();
+}
+
+// Slope classes are indicative starting points, adjust with local advice
+function slopeClass(pct) {
+  if (pct < 2) return "flat";
+  if (pct < 6) return "gentle";
+  if (pct < 12) return "moderate";
+  if (pct < 25) return "steep";
+  return "very steep";
+}
+
+/* Horn method on a 3 x 3 grid of elevations.
+   z index layout (north at the top):
+     z[0] z[1] z[2]
+     z[3] z[4] z[5]
+     z[6] z[7] z[8]                                                        */
+export function slopeFromGrid(z, stepDeg, latDeg) {
+  const dx = stepDeg * 111320 * Math.cos((latDeg * Math.PI) / 180); // metres between columns
+  const dy = stepDeg * 110540;                                        // metres between rows
+  const dzdx = (z[2] + 2 * z[5] + z[8] - (z[0] + 2 * z[3] + z[6])) / (8 * dx);
+  const dzdy = (z[0] + 2 * z[1] + z[2] - (z[6] + 2 * z[7] + z[8])) / (8 * dy);
+  const rise = Math.hypot(dzdx, dzdy);
+  return { slopePct: rise * 100, slopeDeg: (Math.atan(rise) * 180) / Math.PI };
+}
+
+async function getTerrain(lat, lon) {
+  return memo(`terrain:${lat.toFixed(4)},${lon.toFixed(4)}`, 24 * 3600 * 1000, async () => {
+    const step = 0.002; // about 220 m, larger than the 90 m DEM cell
+    const offsets = [[1, -1], [1, 0], [1, 1], [0, -1], [0, 0], [0, 1], [-1, -1], [-1, 0], [-1, 1]];
+    const lats = offsets.map(([r]) => +(lat + r * step).toFixed(5));
+    const lons = offsets.map(([, c]) => +(lon + c * step).toFixed(5));
+
+    const qs = new URLSearchParams({ latitude: lats.join(","), longitude: lons.join(",") });
+    const json = await getJson(`${OPEN_METEO}/elevation?${qs}`, "Elevation");
+    const z = json.elevation;
+    if (!Array.isArray(z) || z.length !== 9 || z.some((v) => v == null)) {
+      throw new Error("Elevation data is unavailable for this location");
+    }
+
+    const { slopePct, slopeDeg } = slopeFromGrid(z, step, lat);
+    return {
+      location: { lat, lon },
+      elevationM: +z[4].toFixed(1),
+      slopePct: +slopePct.toFixed(1),
+      slopeDeg: +slopeDeg.toFixed(1),
+      slopeClass: slopeClass(slopePct),
+      grid: z,
+      source: "Copernicus GLO-90 DEM via Open-Meteo (not NASA)",
+      fetchedAt: new Date().toISOString(),
+    };
+  });
+}
+
+async function getForecast(lat, lon, days = 7) {
+  return memo(`forecast:${lat.toFixed(2)},${lon.toFixed(2)},${days}`, 60 * 60 * 1000, async () => {
+    const qs = new URLSearchParams({
+      latitude: lat,
+      longitude: lon,
+      daily: "temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max",
+      timezone: "auto",
+      forecast_days: days,
+    });
+    const json = await getJson(`${OPEN_METEO}/forecast?${qs}`, "Forecast");
+    const d = json.daily;
+    const daily = d.time.map((t, i) => ({
+      date: t, // YYYY-MM-DD
+      maxC: d.temperature_2m_max[i],
+      minC: d.temperature_2m_min[i],
+      rainMm: d.precipitation_sum[i],
+      rainProbPct: d.precipitation_probability_max[i],
+    }));
+    const rain = daily.map((r) => r.rainMm ?? 0);
+    return {
+      location: { lat, lon },
+      daily,
+      summary: {
+        days: daily.length,
+        totalRainMm: +rain.reduce((a, b) => a + b, 0).toFixed(1),
+        maxTempC: Math.max(...daily.map((r) => r.maxC ?? -Infinity)),
+        minTempC: Math.min(...daily.map((r) => r.minC ?? Infinity)),
+      },
+      source: "Open-Meteo forecast (not NASA)",
+      fetchedAt: new Date().toISOString(),
+    };
+  });
+}
+
 const POWER_URL = "https://power.larc.nasa.gov/api/temporal/daily/point";
 const ELEVATION_URL = "https://api.open-meteo.com/v1/elevation";
 const GROUPS = {
-  weather: ["T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR", "RH2M", "WS2M", "ALLSKY_SFC_SW_DWN", "EVLAND", "EVPTRNS"],
-  soil: ["GWETTOP", "GWETROOT", "GWETPROF", "PRECTOTCORR", "EVLAND", "EVPTRNS", "T2M"],
+ weather: ["T2M", "T2M_MAX", "T2M_MIN", "PRECTOTCORR", "RH2M", "WS2M", "ALLSKY_SFC_SW_DWN", "T2MDEW"],
+     evap: ["EVLAND"],
+       soil: ["GWETTOP", "GWETROOT", "GWETPROF", "PRECTOTCORR", "EVLAND", "EVPTRNS", "T2M"],
 };
 const TTL_MS = 6 * 60 * 60 * 1000;
 const cache = new Map();
@@ -86,109 +190,50 @@ async function fetchPower(group, lat, lon, days) {
   return data;
 }
 
-export async function getWeather(lat, lon, days = 14) {
+
+async function getWeather(lat, lon, days = 14) {
   const { p, elevationM } = await fetchPower("weather", lat, lon, days);
-  const dates = Object.keys(p.T2M || {}).sort();
 
-  const daily = dates.map((d) => {
-    const tempC = clean(p.T2M?.[d]);
-    const maxC = clean(p.T2M_MAX?.[d]);
-    const minC = clean(p.T2M_MIN?.[d]);
-    const rainMm = clean(p.PRECTOTCORR?.[d]);
-    const humidityPct = clean(p.RH2M?.[d]);
-    const windMs = clean(p.WS2M?.[d]);
-    const solarMJ = clean(p.ALLSKY_SFC_SW_DWN?.[d]);
-    const evapMm = clean(p.EVLAND?.[d]);
-    const evapEnergy = clean(p.EVPTRNS?.[d]);
+  // EVLAND is requested on its own so that a failure cannot break the main weather data.
+  let evland = {};
+  try {
+    evland = (await fetchPower("evap", lat, lon, days)).p.EVLAND ?? {};
+  } catch {
+    /* EVLAND unavailable, the page falls back to an estimate */
+  }
 
-    const heatIndexC = maxC != null && humidityPct != null ? calcHeatIndex(maxC, humidityPct) : null;
-    const thiC = maxC != null && humidityPct != null ? calcTHI(maxC, humidityPct) : null;
-    const stress = heatStressCategory(heatIndexC);
-    const waterBalanceMm = rainMm != null && evapMm != null ? +(rainMm - evapMm).toFixed(1) : null;
-
-    return {
-      date: d,
-      tempC,
-      maxC,
-      minC,
-      rainMm,
-      evapMm,
-      evapEnergy,
-      waterBalanceMm,
-      humidityPct,
-      windMs,
-      solarMJ,
-      heatIndexC,
-      thiC,
-      heatStressLevel: stress.level,
-      heatStressClass: stress.class,
-    };
-  });
+  const daily = Object.keys(p.T2M).map((d) => ({
+    date: d,
+    tempC: clean(p.T2M[d]),
+    maxC: clean(p.T2M_MAX[d]),
+    minC: clean(p.T2M_MIN[d]),
+    dewC: clean(p.T2MDEW[d]),
+    rainMm: clean(p.PRECTOTCORR[d]),
+    humidityPct: clean(p.RH2M[d]),
+    windMs: clean(p.WS2M[d]),
+    solarMJ: clean(p.ALLSKY_SFC_SW_DWN[d]),
+    evlandMm: clean(evland[d]),
+  }));
 
   const valid = daily.filter((r) => r.tempC !== null);
-  const recentDays = valid.slice(-days);
-  const totalRain = sum(recentDays, "rainMm");
-  const totalEvap = sum(recentDays, "evapMm");
-  const netWaterBalance = +(totalRain - totalEvap).toFixed(1);
-
-  // Heat stress statistics
-  const heatStressDays = recentDays.filter((r) => (r.heatIndexC ?? 0) >= 36 || (r.maxC ?? 0) >= 33).length;
-  const severeHeatDays = recentDays.filter((r) => (r.heatIndexC ?? 0) >= 41).length;
-  const nightStressDays = recentDays.filter((r) => (r.minC ?? 0) >= 24.5).length;
-  const latestHI = recentDays.at(-1)?.heatIndexC ?? null;
-  const maxHI = recentDays.length ? Math.max(...recentDays.map((r) => r.heatIndexC || 0)) : null;
-  const avgHI = avg(recentDays, "heatIndexC");
-
-  const overallHeatRisk = severeHeatDays > 0 ? "Severe" : heatStressDays >= 4 ? "Moderate" : heatStressDays > 0 ? "Mild" : "Low";
-
   return {
-    location: {
-      lat,
-      lon,
-      elevationM,
-      elevationFt: elevationM != null ? Math.round(elevationM * 3.28084) : null,
-      altitudeZone: getAltitudeZone(elevationM),
-    },
-    daily: recentDays,
+    location: { lat, lon, elevationM },
+    daily,
     summary: {
-      daysWithData: recentDays.length,
-      avgTempC: avg(recentDays, "tempC"),
-      avgMaxC: avg(recentDays, "maxC"),
-      avgMinC: avg(recentDays, "minC"),
-      totalRainMm: totalRain,
-      avgRainMm: avg(recentDays, "rainMm"),
-      rainyDays: recentDays.filter((r) => (r.rainMm ?? 0) >= 1).length,
-      totalEvapMm: totalEvap,
-      avgEvapMm: avg(recentDays, "evapMm"),
-      netWaterBalanceMm: netWaterBalance,
-      waterBalanceStatus: netWaterBalance >= 0 ? `Surplus (+${netWaterBalance} mm)` : `Deficit (${netWaterBalance} mm)`,
-      avgHumidityPct: avg(recentDays, "humidityPct"),
-      avgWindMs: avg(recentDays, "windMs"),
-      avgSolarMJ: avg(recentDays, "solarMJ"),
-      heatStress: {
-        currentHeatIndex: latestHI,
-        maxHeatIndex: maxHI,
-        avgHeatIndex: avgHI,
-        heatStressDays,
-        severeHeatDays,
-        nightStressDays,
-        riskLevel: overallHeatRisk,
-        advisory:
-          overallHeatRisk === "Severe"
-            ? "Severe canopy heat stress. Irrigate in early morning / late evening, maintain soil mulching, and avoid foliar fertilization during peak heat."
-            : overallHeatRisk === "Moderate"
-            ? "Moderate heat stress detected. Monitor soil moisture closely to offset high transpirational demand; consider shade netting for sensitive seedlings."
-            : overallHeatRisk === "Mild"
-            ? "Mild thermal stress. Crop water uptake is elevated; standard irrigation schedule is adequate."
-            : "Thermal conditions are favorable. No heat stress mitigation required.",
-      },
-      lastDataDate: recentDays.at(-1)?.date ?? null,
+      daysWithData: valid.length,
+      avgTempC: avg(valid, "tempC"),
+      totalRainMm: sum(valid, "rainMm"),
+      rainyDays: valid.filter((r) => (r.rainMm ?? 0) >= 1).length,
+      avgHumidityPct: avg(valid, "humidityPct"),
+      avgSolarMJ: avg(valid, "solarMJ"),
+      lastDataDate: valid.at(-1)?.date ?? null,
     },
     fetchedAt: new Date().toISOString(),
   };
 }
 
-export async function getSoil(lat, lon, days = 14) {
+
+async function getSoil(lat, lon, days = 14) {
   const { p, elevationM } = await fetchPower("soil", lat, lon, days);
   const dates = Object.keys(p.GWETROOT || {}).sort();
 
@@ -368,141 +413,6 @@ export async function getWaterTrend(lat, lon, days = 90) {
   };
 }
 
-// Terrain Elevation and Slope Calculation
-export async function getTerrain(lat, lon) {
-  const key = `terrain:${lat.toFixed(4)},${lon.toFixed(4)}`;
-  const hit = cache.get(key);
-  if (hit && Date.now() - hit.at < TTL_MS) return hit.data;
-
-  // 5-point stencil (Center, North, South, East, West) at offset ~0.001 deg (~111 m)
-  const dLat = 0.001;
-  const dLon = 0.001;
-  const lats = [lat, lat + dLat, lat - dLat, lat, lat];
-  const lons = [lon, lon, lon, lon + dLon, lon - dLon];
-
-  let centerElevation = null;
-  let slopePct = 0;
-  let slopeDeg = 0;
-  let aspect = "Flat / Neutral";
-  let source = "NASA SRTM 90m DEM";
-
-  try {
-    const qs = new URLSearchParams({
-      latitude: lats.join(","),
-      longitude: lons.join(","),
-    });
-    const res = await fetch(`${ELEVATION_URL}?${qs}`);
-    if (res.ok) {
-      const json = await res.json();
-      if (Array.isArray(json.elevation) && json.elevation.length === 5) {
-        const [zC, zN, zS, zE, zW] = json.elevation;
-        centerElevation = zC;
-
-        const dx = 2 * 111320 * Math.cos((lat * Math.PI) / 180) * dLon;
-        const dy = 2 * 110574 * dLat;
-        const dzdx = (zE - zW) / dx;
-        const dzdy = (zN - zS) / dy;
-
-        const slopeRatio = Math.sqrt(dzdx * dzdx + dzdy * dzdy);
-        slopePct = +(slopeRatio * 100).toFixed(1);
-        slopeDeg = +((Math.atan(slopeRatio) * 180) / Math.PI).toFixed(1);
-
-        // Aspect (downslope direction)
-        const rad = Math.atan2(-dzdy, -dzdx);
-        let deg = (rad * 180) / Math.PI;
-        if (deg < 0) deg += 360;
-
-        const CARDINALS = ["North", "Northeast", "East", "Southeast", "South", "Southwest", "West", "Northwest"];
-        const cardinalIdx = Math.round(deg / 45) % 8;
-        aspect = slopePct < 1.0 ? "Flat / Level Ground" : `${CARDINALS[cardinalIdx]} (${Math.round(deg)}°)`;
-      }
-    }
-  } catch {
-    // If elevation service is offline, fallback to NASA POWER geometry elevation
-    try {
-      const pow = await fetchPower("weather", lat, lon, 7);
-      centerElevation = pow.elevationM ?? 25;
-      source = "NASA POWER gridded topography";
-      slopePct = 1.5;
-      slopeDeg = 0.9;
-      aspect = "Gentle slope";
-    } catch {
-      centerElevation = 25;
-      source = "Regional model estimate";
-    }
-  }
-
-  // Agricultural slope classification (Malaysian DOA & FAO standards)
-  let slopeClass = "Flat (0–2%)";
-  let erosionRisk = "Low";
-  let drainageClass = "Moderate / Ponding Risk";
-  let recommendations = [];
-
-  if (slopePct < 2.0) {
-    slopeClass = "Flat (0–2%) · Lowland plain";
-    erosionRisk = "Very Low";
-    drainageClass = "Slow drainage · Potential water ponding";
-    recommendations = [
-      "Excellent for wet paddy rice or mechanized field crops.",
-      "Requires dedicated surface drainage channels to prevent waterlogging during monsoon downpours.",
-      "Minimal soil erosion risk from surface runoff.",
-    ];
-  } else if (slopePct < 6.0) {
-    slopeClass = "Gently Undulating (2–6%) · Ideal agricultural slope";
-    erosionRisk = "Low";
-    drainageClass = "Good natural drainage";
-    recommendations = [
-      "Optimal slope for most vegetables, fruit orchards, and annual crops.",
-      "Good gravity drainage prevents water stagnation without severe soil loss.",
-      "Maintain organic ground cover or light mulching.",
-    ];
-  } else if (slopePct < 12.0) {
-    slopeClass = "Moderately Sloping (6–12%) · Rolling terrain";
-    erosionRisk = "Moderate";
-    drainageClass = "Rapid natural drainage";
-    recommendations = [
-      "Practice contour tillage and planting across the slope to arrest water runoff.",
-      "Establish grass buffer strips (e.g. Vetiver grass) to retain topsoil nutrients.",
-      "Avoid bare fallow periods during heavy rainfall months.",
-    ];
-  } else if (slopePct < 20.0) {
-    slopeClass = "Strongly Sloping (12–20%) · Hillside agriculture";
-    erosionRisk = "High";
-    drainageClass = "Fast surface runoff";
-    recommendations = [
-      "Construct bench terraces or soil bunds before planting annual crops.",
-      "Recommended for perennial tree crops (durian, rubber, oil palm, coffee) rather than clean-tilled vegetables.",
-      "Establish leguminous cover crops (Mucuna bracteata / Calopogonium) to anchor topsoil.",
-    ];
-  } else {
-    slopeClass = "Steep (>20%) · Mountainous terrain";
-    erosionRisk = "Severe";
-    drainageClass = "Excessive runoff · High erosion hazard";
-    recommendations = [
-      "Unsuitable for annual clean cultivation; high landslide and topsoil wash risk.",
-      "Agroforestry, permanent fruit trees, or forest conservation recommended.",
-      "Strict prohibition of bare soil exposure; maintain dense root architecture.",
-    ];
-  }
-
-  const data = {
-    elevationM: centerElevation != null ? Math.round(centerElevation) : null,
-    elevationFt: centerElevation != null ? Math.round(centerElevation * 3.28084) : null,
-    altitudeZone: getAltitudeZone(centerElevation),
-    slopePct,
-    slopeDeg,
-    aspect,
-    slopeClass,
-    erosionRisk,
-    drainageClass,
-    recommendations,
-    source,
-  };
-
-  cache.set(key, { at: Date.now(), data });
-  return data;
-}
-
 // Numerical NDVI and EVI Implementation
 export async function getVegetation(lat, lon) {
   const key = `veg:${lat.toFixed(3)},${lon.toFixed(3)}`;
@@ -636,3 +546,5 @@ export async function getDaily(lat, lon, days = 14) {
     summary: w.summary,
   };
 }
+   export { getWeather, getSoil, getTerrain, getForecast };
+

@@ -15,3 +15,7 @@ npm-debug.log*
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Files
+_old_unused/
+

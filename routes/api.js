@@ -4,6 +4,12 @@ import { weather, soil, waterTrend, terrain, vegetation } from "../controllers/n
 
 const router = express.Router();
 
+// Auth (paths match what layout.js calls)
+//router.post("/auth/register", register);
+//router.post("/auth/login", login);
+//router.post("/auth/logout", logout);
+//router.get("/auth/me", me);
+
 // AI chatbot
 router.post("/chat", chat);
 

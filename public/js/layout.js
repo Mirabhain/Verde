@@ -1,6 +1,7 @@
 // App shell for signed-in pages: auth guard, sidebar, user box and the AI assistant.
-import { api, escapeHTML } from './api.js';
-import { setActiveUser, pullProfile, getFarm, clearLocal } from './storage.js';
+import { escapeHTML } from './api.js';
+import { getFarm } from './storage.js';
+import { getCurrentUser, logout } from './auth.js';
 
 const ICONS = {
   dashboard: '<path d="M3 13h8V3H3zM13 21h8V11h-8zM3 21h8v-6H3zM13 3v6h8V3z"/>',
@@ -21,18 +22,12 @@ const NAV = [
 const svg = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 
 async function boot() {
-  let user;
-  try {
-    ({ user } = await api('/api/auth/me'));
-  } catch (e) {
-    if (e.status === 401) {
-      location.replace('/login?next=' + encodeURIComponent(location.pathname));
-      return new Promise(() => {}); // stop the page script while redirecting
+const user = getCurrentUser();
+
+    if (!user) {
+        location.replace('/login?next=' + encodeURIComponent(location.pathname));
+        return new Promise(() => {});
     }
-    throw e;
-  }
-  setActiveUser(user.id);
-  try { await pullProfile(); } catch { /* use cached copy */ }
 
   const content = document.getElementById('content');
   const path = location.pathname.replace(/\.html$/, '').replace(/\/$/, '') || '/';
@@ -57,11 +52,10 @@ async function boot() {
     const open = side.classList.toggle('open');
     e.currentTarget.setAttribute('aria-expanded', open);
   });
-  shell.querySelector('#logoutBtn').addEventListener('click', async () => {
-    try { await api('/api/auth/logout', { method: 'POST' }); } catch { /* cookie cleared anyway on next call */ }
-    clearLocal();
+  shell.querySelector('#logoutBtn').addEventListener('click', () => {
+    logout();
     location.href = '/login';
-  });
+});
 
   const { initChat } = await import('/js/chat.js');
   initChat(user);
