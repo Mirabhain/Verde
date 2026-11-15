@@ -12,7 +12,7 @@
 <div class="page-head">
   <div><h1>Farm calendar</h1><p>Plan activities, and see which months are usually wetter or drier at your farm.</p></div>
 </div>
-<div class="grid g2" style="grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);align-items:start">
+<div class="grid" style="grid-template-columns:1fr;gap:24px;align-items:start">
   <section class="panel">
     <h2>Add an activity</h2>
     <form id="taskForm" class="task-form">
@@ -23,10 +23,15 @@
     <p id="taskMsg" class="form-error" hidden></p>
     <div id="taskList" aria-live="polite"></div>
   </section>
-  <section class="panel">
-    <h2>Wet and dry months</h2>
-    <div id="riskBox"><div class="skeleton" style="height:120px"></div></div>
-  </section>
+<section class="panel">
+  <h2>Wet and dry months</h2>
+
+  <div class="risk-scroll">
+    <div id="riskBox">
+      <div class="skeleton" style="height:120px"></div>
+    </div>
+  </div>
+</section>
 </div>
 </div>
 <script src="/vendor/chart.umd.js"></script>

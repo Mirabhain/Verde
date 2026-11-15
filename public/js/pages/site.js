@@ -6,7 +6,6 @@ if (getCurrentUser()) {
   for (const id of ['navCta', 'heroCta']) { const a = document.getElementById(id); if (a) { a.href = '/dashboard'; a.textContent = id === 'navCta' ? 'Open dashboard' : 'Open my dashboard'; } }
 }
 
-// Live NASA preview, fixed location (Kuantan). Real data fetched through the server; no placeholder numbers.
 
 const body = document.getElementById('readoutBody');
 const dot = document.getElementById('liveDot');

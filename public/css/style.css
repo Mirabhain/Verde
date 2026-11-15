@@ -436,3 +436,14 @@ body.plain{background:var(--bg)}
     grid-template-columns: 1fr;
   }
 }
+
+/* Farm calendar layout */
+.risk-scroll {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.risk-scroll #riskBox {
+  min-width: 900px;
+}
