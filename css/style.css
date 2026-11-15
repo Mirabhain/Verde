@@ -724,3 +724,8 @@ canvas {
 
 /* Remove the small photo card, since the photo is now the background */
 .hero-photo { display: none; }
+
+.nasa-map{height:420px;border:1px solid #e5e0d6;border-radius:12px;overflow:hidden}
+.data-table{width:100%;border-collapse:collapse;font-size:14px}
+.data-table th,.data-table td{padding:8px 10px;text-align:left;border-bottom:1px solid #eee9db;white-space:nowrap}
+.data-table th{color:#67707b;font-weight:600}

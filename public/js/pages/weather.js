@@ -1,60 +1,42 @@
-import { getFarm, saveWeather } from '../storage.js';
-import { fetchNasaPower } from '../nasa-api.js';
-import { drawWeatherChart } from '../chart.js';
+import { getFarmLocation, getWeather, mountMap, shortDate, show } from "../nasa-api.js";
 
-const $ = s => document.querySelector(s);
+const metrics = document.getElementById("nasaMetrics");
+const table = document.getElementById("weatherTable");
+const note = document.getElementById("weatherNote");
 
-$('#fetchNasaBtn').addEventListener('click', async () => {
-  const btn = $('#fetchNasaBtn');
+function card(label, value) {
+  return `<div class="panel"><span class="muted">${label}</span><div class="score">${value}</div></div>`;
+}
 
-  btn.disabled = true;
-  $('#nasaStatus').textContent =
-    'Fetching historical NASA POWER observations...';
+async function init() {
+  const farm = getFarmLocation();
+  mountMap("map", farm.lat, farm.lon, ["trueColor", "ndvi"]);
 
   try {
-    const farm = getFarm();
-    const nasa = await fetchNasaPower(Number(farm.lat), Number(farm.lon));
-    saveWeather(farm, nasa);
-    const r = nasa.records;
-    const avg = k => r.reduce((s, x) => s + x[k], 0) / r.length;
+    const w = await getWeather(farm.lat, farm.lon, 14);
+    const s = w.summary;
+    metrics.innerHTML =
+      card("Average temperature", show(s.avgTempC, " °C")) +
+      card("Rainfall, 14 days", show(s.totalRainMm, " mm", 0)) +
+      card("Rainy days", `${s.rainyDays} of ${s.daysWithData}`);
 
-    $('#nasaMetrics').innerHTML = `
-      <article class="panel">
-        <h4>Mean temperature</h4>
-        <div class="score">${avg('temp').toFixed(1)}°C</div>
-      </article>
+    table.innerHTML =
+      "<thead><tr><th>Date</th><th>Temp</th><th>Min / Max</th><th>Rain</th><th>Humidity</th><th>Wind</th></tr></thead><tbody>" +
+      w.daily
+        .slice()
+        .reverse()
+        .map(
+          (r) => `<tr><td>${shortDate(r.date)}</td><td>${show(r.tempC, " °C")}</td>
+            <td>${show(r.minC, "", 0)} / ${show(r.maxC, " °C", 0)}</td><td>${show(r.rainMm, " mm")}</td>
+            <td>${show(r.humidityPct, "%", 0)}</td><td>${show(r.windMs, " m/s")}</td></tr>`
+        )
+        .join("") +
+      "</tbody>";
 
-      <article class="panel">
-        <h4>Total rainfall</h4>
-        <div class="score">${r.reduce((s, x) => s + x.rain, 0).toFixed(1)} mm</div>
-      </article>
-
-      <article class="panel">
-        <h4>Mean humidity</h4>
-        <div class="score">${avg('humidity').toFixed(1)}%</div>
-      </article>
-    `;
-
-    drawWeatherChart($('#weatherChart'), r);
-
-    $('#nasaStatus').textContent =
-      `Loaded ${r.length} historical days (${nasa.start} to ${nasa.end}) for ${farm.name}.`;
-
-    const a = document.createElement('a');
-    a.href = nasa.url;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.textContent = 'Open exact NASA request';
-
-    $('#nasaSource').replaceChildren(
-      document.createTextNode('NASA POWER daily point API · '),
-      a
-    );
-  } catch (e) {
-    $('#nasaStatus').textContent = 'Error: ' + e.message;
-    $('#nasaMetrics').replaceChildren();
-    drawWeatherChart($('#weatherChart'), []);
-  } finally {
-    btn.disabled = false;
+    note.textContent = `Source: NASA POWER. Latest data: ${s.lastDataDate ? shortDate(s.lastDataDate) : "n/a"}. Recent days can be missing.`;
+  } catch (err) {
+    metrics.innerHTML = `<div class="notice">Could not load weather data: ${err.message}</div>`;
   }
-});
+}
+
+init();

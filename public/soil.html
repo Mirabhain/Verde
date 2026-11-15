@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Soil Analysis | VerdeAI</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+
   </head>
 
   <body>
@@ -45,22 +47,19 @@
         </aside>
 
         <div class="content">
-          <section class="page active">
-            <h3>Soil analysis · preliminary</h3>
+          <div class="stat-grid" id="soilMetrics"></div>
+            <div class="notice" id="soilStatus"></div>
 
-            <p class="muted">
-              NASA POWER weather does not measure farm soil nitrogen,
-              phosphorus, potassium or pH.
-            </p>
+            <section class="panel" style="margin-top:20px">
+              <h4>Soil wetness, last 14 days</h4>
+              <div style="overflow-x:auto"><table class="data-table" id="soilTable"></table></div>
+              <p class="muted">Modelled by NASA POWER on a grid of about 50 km. Values run from 0 (dry) to 1 (saturated). Confirm with a soil test.</p>
+            </section>
 
-            <div class="panel" id="soilDetails"></div>
-
-            <div class="notice">
-              For accurate nutrient recommendations, collect a soil sample
-              and consult a qualified agricultural adviser. No laboratory
-              nutrient values are inferred here.
-            </div>
-          </section>
+            <section class="panel" style="margin-top:20px">
+              <h4>Vegetation health</h4>
+              <div id="map" class="nasa-map"></div>
+            </section>
         </div>
       </div>
     </main>
@@ -72,5 +71,6 @@
 
     <script type="module" src="/js/common.js"></script>
     <script type="module" src="/js/pages/soil.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
   </body>
 </html>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Weather Analysis | VerdeAI</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
   </head>
 
   <body>
@@ -45,43 +46,18 @@
         </aside>
 
         <div class="content">
-          <section class="page active">
-            <h3>NASA Weather Analysis</h3>
+          <div class="stat-grid" id="nasaMetrics"></div>
 
-            <p class="muted">
-              Fetch historical daily temperature, precipitation and relative
-              humidity for your saved coordinates.
-            </p>
+            <section class="panel">
+              <h4>Last 14 days</h4>
+              <div style="overflow-x:auto"><table class="data-table" id="weatherTable"></table></div>
+              <p class="muted" id="weatherNote"></p>
+            </section>
 
-            <button class="primary" id="fetchNasaBtn">
-              Fetch NASA observations
-            </button>
-
-            <p class="muted" id="nasaStatus" role="status"></p>
-
-            <div class="stat-grid" id="nasaMetrics"></div>
-
-            <div class="panel">
-              <h4>Daily rainfall and temperature (last 30 available days)</h4>
-
-              <canvas
-                aria-label="NASA climate chart"
-                height="310"
-                id="weatherChart"
-                width="850"
-              ></canvas>
-
-              <p class="fine">
-                Precipitation and temperature use separate scales. Hover values
-                are not supported in this lightweight chart.
-              </p>
-            </div>
-
-            <div class="panel">
-              <h4>Data source</h4>
-              <p id="nasaSource">NASA POWER daily point API. No API key required.</p>
-            </div>
-          </section>
+            <section class="panel" style="margin-top:20px">
+              <h4>Satellite view</h4>
+              <div id="map" class="nasa-map"></div>
+</section>
         </div>
       </div>
     </main>
@@ -93,5 +69,6 @@
 
     <script type="module" src="/js/common.js"></script>
     <script type="module" src="/js/pages/weather.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
   </body>
 </html>

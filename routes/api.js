@@ -1,5 +1,6 @@
 import express from "express";
 import { chat } from "../controllers/chatController.js";
+import { weather, soil } from "../controllers/nasaController.js";
 
 const router = express.Router();
 
@@ -19,5 +20,9 @@ router.post("/farms", async (req, res) => {
 router.post("/rotation/recommend", async (req, res) => {
     res.json({ message: "Rotation recommendation endpoint placeholder." });
 });
+
+// NASA POWER endpoints
+router.get("/weather", weather);
+router.get("/soil", soil);
 
 export default router;
