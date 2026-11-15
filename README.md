@@ -1,99 +1,107 @@
-# VerdeAI – Prototype Setup Guide
+# VerdeAI — AI-Powered Agricultural Decision Support
 
-## 1. Project Overview
+**Live Website:** [https://verdeai-x3ls.onrender.com/](https://verdeai-x3ls.onrender.com/)
 
-VerdeAI is a web-based agricultural assistant prototype designed to help users manage farm information, monitor weather conditions, and explore agricultural recommendations.
+> **Be Verdant with VerdeAI.**  
+> *Smarter Decisions. Greener Harvests.*
 
-This prototype prioritises demonstrating the main features and user experience rather than implementing a complete production system.
+VerdeAI is a web-based agricultural assistant prototype designed to help Malaysian farmers manage farm information, explore crop rotation recommendations, monitor climate and soil conditions, and plan agricultural activities using external data services and AI-powered assistance.
 
-## 2. Requirements
+This project is a **prototype for demonstration and learning**, not a production-ready farm management system. Some analyses are calculated or estimated from available inputs and should not be treated as field measurements or professional agronomic advice.
 
-Install the following before running the project:
+## Features and Screenshots
 
-- Node.js and npm
-- Git
-- Visual Studio Code (recommended)
-- Internet connection for external API requests
+> **Screenshot setup:** Save your screenshots in a `screenshots/` folder at the repository root, using the filenames shown below. Replace or remove sections that are not present in your current build. Images will appear automatically on GitHub once the files are committed.
 
-## 3. Installation
+### 1. Home Page
 
-Clone the repository:
+The landing page introduces VerdeAI, its main agricultural decision-support features, and a quick overview of climate information for the selected location.
 
-```bash
-git clone <repository-url>
-```
+![VerdeAI home page](screenshots/home.png)
 
-Navigate into the project directory:
+### 2. Farm Profile and Management
 
-```bash
-cd VerdeAI
-```
+Users can enter and manage basic farm details to personalise their experience. Prototype farm information is stored in the browser.
 
-Install dependencies:
+![Farm management page](screenshots/farm-profile.png)
 
-```bash
-npm install
-```
+### 3. Weather and Climate Dashboard
 
-Create a `.env` file if required by the backend.
+Explore historical weather observations and summaries, including temperature, rainfall, humidity, evaporation and related agricultural indicators. Historical climate data is sourced from NASA POWER.
 
-Example:
+![Weather dashboard](screenshots/weather-dashboard.png)
 
-```env
-PORT=3000
-GROQ_API_KEY=your_api_key
-```
+### 4. Soil and Water Monitoring
 
-Do not upload `.env` or API keys to GitHub.
+View soil wetness, rainfall, evaporation and water-balance indicators to support farm planning. NASA POWER values represent gridded estimates, not physical sensors installed on a farm.
 
-## 4. Running the Project
+![Soil and water monitoring](screenshots/soil-monitoring.png)
 
-Start the application:
+### 5. Weather Forecast and Terrain
 
-```bash
-npm run start
-```
+Review forecast conditions and terrain indicators, including elevation and estimated slope, where the external provider is available. Forecast and elevation requests use Open-Meteo in the current backend code.
 
-Open the application in your browser:
+![Forecast and terrain information](screenshots/forecast-terrain.png)
 
-```text
-http://localhost:3000
-```
+### 6. Crop Rotation Recommendations
 
-## 5. Prototype Data Storage
+Explore crop rotation suggestions to support planning based on available agricultural information. Recommendations are decision-support outputs and should be checked against local agronomic conditions.
 
-The prototype uses browser LocalStorage for basic user and farm information.
+![Crop rotation recommendations](screenshots/crop-rotation.png)
 
-| Feature | Storage |
+### 7. Farm Calendar and Risk Planning
+
+Organise farm activities and explore wet/dry periods, seasonal risks and crop-planning timelines where implemented in the current build.
+
+![Farm calendar](screenshots/farm-calendar.png)
+
+### 8. AI Agricultural Assistant
+
+Ask agriculture-related questions using the AI assistant. The backend integrates with the Groq API when a valid `GROQ_API_KEY` is configured.
+
+![AI agricultural assistant](screenshots/ai-assistant.png)
+
+### 9. Data Visualisation and Trends
+
+View charts and timelines for available agricultural and climate data. The exact charts shown depend on the features implemented in the current version.
+
+![Data visualisation dashboard](screenshots/data-visualisation.png)
+
+## Technology Stack
+
+| Layer | Technology |
 |---|---|
-| Demo authentication | LocalStorage |
-| Farm profile | LocalStorage |
-| Farm calendar/tasks | LocalStorage |
-| Temporary API cache | SessionStorage |
-| AI responses | API integration |
+| Frontend | HTML, CSS, JavaScript |
+| Backend | Node.js, Express.js |
+| AI integration | Groq API |
+| Historical climate and soil indicators | NASA POWER API |
+| Weather forecast and elevation | Open-Meteo API |
+| Vegetation data attempt | NASA ORNL DAAC MODIS subset API |
+| Prototype storage | Browser LocalStorage; SessionStorage where used |
+| Deployment | Render |
 
-**Important:**
-- Data is stored locally in the current browser.
-- Clearing browser storage may remove saved prototype data.
-- Data does not automatically synchronise between devices.
-- Demo authentication is not secure and must not be used for real accounts.
+## External API Integration
 
-## 6. API Integration
+| Provider / endpoint | Purpose | Notes |
+|---|---|---|
+| NASA POWER daily point API | Historical temperature, precipitation, humidity, soil wetness, evaporation, solar radiation | No API key required |
+| NASA POWER monthly point API | Monthly climate summaries and seasonal patterns | No API key required |
+| Open-Meteo forecast API | Short-term temperature and rainfall forecast | Subject to provider rate limits |
+| Open-Meteo elevation API | Elevation samples used for terrain and slope estimates | Subject to provider rate limits |
+| NASA ORNL DAAC MODIS subset API | Attempts to retrieve NDVI/EVI observations | Availability depends on requested data |
+| Groq API | AI-powered agricultural assistance | Requires a private API key |
 
-External API requests are handled through the Express backend.
+**Data transparency:** NASA POWER provides gridded climate estimates rather than on-farm sensor measurements. Terrain slope, heat-stress categories, water-balance summaries and crop recommendations are derived by VerdeAI. The current vegetation module may use model-estimated or hardcoded fallback NDVI/EVI values if satellite retrieval fails; these must not be represented as measured satellite observations.
 
-| API | Purpose |
-|---|---|
-| Groq API | AI-powered agricultural assistance |
-| NASA POWER API | Historical and agricultural weather data |
-| Weather forecast API | Weather forecast information |
+### Backend API endpoints
 
-The frontend communicates with the backend through endpoints such as:
+Examples of frontend-to-backend endpoints used by the prototype:
 
 ```text
 /api/nasa/daily
 /api/nasa/climate
 /api/forecast
+/api/terrain
 ```
 
 The Express API routes are registered through:
@@ -102,46 +110,119 @@ The Express API routes are registered through:
 app.use("/api", apiRoutes);
 ```
 
-New API endpoints should be added to the existing `routes/api.js` file to maintain the current project structure.
+Add new endpoints to the existing `routes/api.js` where appropriate to preserve the current project structure. Verify actual route names against the latest source before documenting additional endpoints.
 
-Do not create unnecessary additional route files for this prototype.
+## Requirements
 
-## 7. Development Guidelines
+Install the following before running the project:
 
-To keep the prototype manageable:
+- Node.js and npm
+- Git
+- Visual Studio Code (recommended)
+- Internet connection for external API requests
 
-1. Preserve the existing folder structure.
-2. Reuse existing JavaScript modules and API functions.
-3. Avoid unnecessary database dependencies.
-4. Use LocalStorage for farm and task persistence.
-5. Keep external API requests in the backend where appropriate.
-6. Do not expose private API keys in frontend JavaScript.
-7. Avoid changing existing UI components unless required.
-8. Test each feature after making changes.
+## Installation
 
-## 8. Troubleshooting
+**1. Clone the repository**
 
-| Problem | Possible Solution |
+```bash
+git clone <repository-url>
+cd VerdeAI
+```
+
+Replace `<repository-url>` with your actual GitHub repository URL.
+
+**2. Install dependencies**
+
+```bash
+npm install
+```
+
+**3. Configure environment variables**
+
+Create a `.env` file in the project root if required by the backend:
+
+```env
+PORT=3000
+GROQ_API_KEY=your_groq_api_key_here
+```
+
+Never commit `.env` or real API keys to GitHub. Add `.env` to `.gitignore`.
+
+**4. Start the server**
+
+```bash
+npm run start
+```
+
+If Windows PowerShell blocks `npm.ps1`, try:
+
+```powershell
+npm.cmd install
+npm.cmd run start
+```
+
+**5. Open the application**
+
+```text
+http://localhost:3000
+```
+
+## Prototype Data Storage
+
+| Feature | Storage |
 |---|---|
-| `404 Not Found` | Check whether the requested Express endpoint exists and is registered. |
-| `Cannot GET /api/...` | Verify the route path in `routes/api.js`. |
-| NASA API failure | Check internet connectivity, coordinates and NASA API response. |
-| Forecast API failure | Check the configured forecast provider and endpoint. |
-| `ERR_ABORTED 404` for JavaScript | Verify the script path and file location inside `public/`. |
-| Chart.js cannot acquire context | Check whether the required canvas element exists and its ID matches. |
-| Cannot set `innerHTML` of null | Verify that the referenced HTML element exists. |
-| LocalStorage data missing | Check browser storage and the correct storage key. |
+| Demo authentication | LocalStorage |
+| Farm profile | LocalStorage |
+| Farm calendar / tasks | LocalStorage |
+| Temporary frontend API cache | SessionStorage, where implemented |
+| Backend API response cache | In-memory cache, where implemented |
+| AI responses | External API integration |
 
-## 9. Prototype Limitations
+**Important:** Browser-stored data is specific to the browser and device. Clearing storage may remove saved information. It does not automatically synchronise across devices. Demo authentication is not secure enough for real user accounts.
 
-- Authentication is simulated for demonstration.
+## Deployment
+
+The prototype is available at **[VerdeAI on Render](https://verdeai-x3ls.onrender.com/)**.
+
+For deployment, configure required environment variables (including `GROQ_API_KEY`) in the hosting provider's environment settings. A local `.env` file is not automatically uploaded to Render. If auto-deploy is enabled, pushing changes to the branch configured in Render triggers a new deployment.
+
+## Development Guidelines
+
+1. Preserve the existing project structure and reuse JavaScript modules where practical.
+2. Avoid unnecessary database dependencies for prototype-only features.
+3. Use LocalStorage for simple farm and task persistence.
+4. Keep private API keys on the backend, never in frontend JavaScript.
+5. Handle missing or rate-limited external data without presenting fabricated values as observations.
+6. Avoid unnecessary UI changes and test affected features after every update.
+7. Keep screenshots and documentation aligned with the deployed build.
+
+## Troubleshooting
+
+| Problem | Suggested check |
+|---|---|
+| `404 Not Found` / `Cannot GET /api/...` | Verify the endpoint and its registration in `routes/api.js`. |
+| NASA API failure | Check connectivity, coordinates, requested parameters and NASA response. |
+| Forecast / elevation `429` | External provider may be rate-limiting requests; inspect server logs, reduce duplicate calls, use caching and respect `Retry-After`. |
+| `/api/terrain` returns `502` | Check whether the upstream elevation API failed and whether the backend converts that failure into `502`. |
+| Groq `401` | Verify the private Groq API key and environment configuration. |
+| `ERR_ABORTED 404` for JavaScript | Check script paths under `public/`. |
+| Chart.js cannot acquire context | Confirm the canvas exists and its ID matches the JavaScript selector. |
+| Cannot set `innerHTML` of null | Confirm the referenced HTML element exists. |
+| LocalStorage data missing | Check the browser's storage and the storage key. |
+
+## Prototype Limitations
+
+- Authentication is simulated for demonstration purposes.
 - Farm information and tasks are browser-specific.
-- External API availability depends on internet connectivity and provider availability.
-- Weather and agricultural recommendations are intended for demonstration and learning purposes.
-- The prototype is not intended for production deployment.
+- External API services can be unavailable or rate-limited, especially on shared hosting networks.
+- Some vegetation indicators may be estimates or fallback values rather than verified satellite observations.
+- Crop rotation and weather recommendations are for learning and demonstration, not guaranteed agricultural outcomes.
+- The prototype is not intended for production deployment without further security, data validation and reliability work.
 
 ---
 
 **Project:** VerdeAI  
-**Purpose:** Agricultural management and AI assistant prototype  
-**Environment:** Node.js, Express.js, HTML, CSS and JavaScript
+**Purpose:** Agricultural management and AI-powered decision-support prototype  
+**Environment:** Node.js, Express.js, HTML, CSS and JavaScript  
+**Live Demo:** https://verdeai-x3ls.onrender.com/
