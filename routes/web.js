@@ -1,40 +1,14 @@
 import express from "express";
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const router = express.Router();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const pages = ["index", "login", "dashboard", "farm", "rotation", "soil", "weather", "calendar"];
+const file = (name) => path.join(__dirname, "../public", `${name}.html`);
 
-// Map URL paths to HTML files
-const pages = {
-    "/": "index.html",
-    "/index": "index.html",
-    "/index.html": "index.html",
-    "/login": "login.html",
-    "/login.html": "login.html",
-    "/dashboard": "dashboard.html",
-    "/dashboard.html": "dashboard.html",
-    "/farm": "farm.html",
-    "/farm.html": "farm.html",
-    "/calendar": "calendar.html",
-    "/calendar.html": "calendar.html",
-    "/rotation": "rotation.html",
-    "/rotation.html": "rotation.html",
-    "/soil": "soil.html",
-    "/soil.html": "soil.html",
-    "/weather": "weather.html",
-    "/weather.html": "weather.html"
-};
-
-// Register page routes
-for (const [route, file] of Object.entries(pages)) {
-    router.get(route, (req, res) => {
-        res.sendFile(
-            path.join(__dirname, "../public", file)
-        );
-    });
-}
+router.get(["/", "/index", "/index.html"], (req, res) => res.sendFile(file("index")));
+for (const p of pages.slice(1)) router.get([`/${p}`, `/${p}.html`], (req, res) => res.sendFile(file(p)));
 
 export default router;

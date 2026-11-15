@@ -1,96 +1,21 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Weather Analysis | VerdeAI</title>
-    <link rel="stylesheet" href="/css/style.css">
-  </head>
-
-  <body>
-    <header class="topbar">
-      <a class="brand" href="/">
-        <span class="logo">✦</span>
-        <b>VerdeAI</b>
-        <small>Malaysia Edition</small>
-      </a>
-
-      <nav>
-        <a href="/">Home</a>
-        <a href="/#how">How it works</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/login" id="accountLink">Log in / Sign up</a>
-      </nav>
-    </header>
-
-    <main class="section workspace">
-      <div class="workspace-heading">
-        <div>
-          <span class="eyebrow">VerdeAI Workspace</span>
-          <h2>Weather Analysis</h2>
-        </div>
-
-        <span id="userStatus" class="muted">Local demo session</span>
-      </div>
-
-      <div class="layout">
-        <aside class="sidebar">
-          <a class="nav-btn" href="/dashboard">▦ Dashboard</a>
-          <a class="nav-btn" href="/farm">⌖ My Farm</a>
-          <a class="nav-btn" href="/rotation">↻ Crop Rotation</a>
-          <a class="nav-btn" href="/soil">◈ Soil Analysis</a>
-          <a class="nav-btn" href="/weather">☁ Weather Analysis</a>
-          <a class="nav-btn" href="/calendar">▣ Farm Calendar</a>
-        </aside>
-
-        <div class="content">
-          <section class="page active">
-            <h3>NASA Weather Analysis</h3>
-
-            <p class="muted">
-              Fetch historical daily temperature, precipitation and relative
-              humidity for your saved coordinates.
-            </p>
-
-            <button class="primary" id="fetchNasaBtn">
-              Fetch NASA observations
-            </button>
-
-            <p class="muted" id="nasaStatus" role="status"></p>
-
-            <div class="stat-grid" id="nasaMetrics"></div>
-
-            <div class="panel">
-              <h4>Daily rainfall and temperature (last 30 available days)</h4>
-
-              <canvas
-                aria-label="NASA climate chart"
-                height="310"
-                id="weatherChart"
-                width="850"
-              ></canvas>
-
-              <p class="fine">
-                Precipitation and temperature use separate scales. Hover values
-                are not supported in this lightweight chart.
-              </p>
-            </div>
-
-            <div class="panel">
-              <h4>Data source</h4>
-              <p id="nasaSource">NASA POWER daily point API. No API key required.</p>
-            </div>
-          </section>
-        </div>
-      </div>
-    </main>
-
-    <footer>
-      © VerdeAI · NASA POWER climate observations
-      <span>Decision-support prototype, not a replacement for agricultural advice.</span>
-    </footer>
-
-    <script type="module" src="/js/common.js"></script>
-    <script type="module" src="/js/pages/weather.js"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NASA weather | VerdeAI</title>
+<link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app">
+<div id="content">
+<div class="page-head">
+  <div><h1>NASA weather</h1><p id="wxSub">Real observations from NASA POWER for your farm pin.</p></div>
+  <button class="btn btn-outline" type="button" id="refreshBtn">Refresh data</button>
+</div>
+<div id="wxBody"><div class="skeleton" style="height:180px"></div></div>
+</div>
+<script src="/vendor/chart.umd.js"></script>
+<script type="module" src="/js/pages/weather.js"></script>
+</body>
 </html>

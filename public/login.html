@@ -1,97 +1,42 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Log in / Sign up | VerdeAI</title>
-    <link rel="stylesheet" href="/css/style.css">
-  </head>
-
-  <body>
-    <header class="topbar">
-      <a class="brand" href="index.html">
-        <img class="logo" src="img/logo.svg" alt="" width="40" height="40">
-        <b>VerdeAI</b>
-        <small>Malaysia Edition</small>
-      </a>
-
-      <nav>
-        <a href="/">Home</a>
-        <a href="/#how">How it works</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/login" id="accountLink">Log in / Sign up</a>
-      </nav>
-    </header>
-
-    <main class="auth-layout">
-      <section class="auth-side">
-        <span class="pill">VerdeAI · Malaysia Edition</span>
-        <h1>Your farm, saved once. Better decisions every season.</h1>
-
-        <p>
-          Compare crop rotation strategies using your farm details and NASA
-          climate observations.
-        </p>
-
-        <p>✓ Save farm details in this browser</p>
-        <p>✓ Explore historical NASA weather</p>
-        <p>✓ Compare rotation options with clear reasons</p>
-
-        <figure class="hero-photo">
-          <img src="img/farmer.jpg" alt="Malaysian farmer smiling among young oil palm seedlings">
-        </figure>
-      </section>
-
-      <section class="auth-main">
-        <form id="loginForm" class="auth-card">
-          <div class="tabs">
-            <button type="button" id="loginTab">Log in</button>
-            <button type="button" id="signupTab" class="selected">Sign up</button>
-          </div>
-
-          <h2 id="authHeading">Create your account</h2>
-
-          <p class="muted">Competition demo: account is not verified by a server.</p>
-
-          <label id="nameField">
-            Full name
-            <input id="authName" autocomplete="name">
-          </label>
-
-          <label>
-            Email
-            <input id="authEmail" type="email" required autocomplete="email">
-          </label>
-
-          <label>
-            Password
-            <input
-              id="authPassword"
-              type="password"
-              minlength="8"
-              required
-              autocomplete="current-password"
-            >
-          </label>
-
-          <button class="primary" type="submit">Continue to Dashboard</button>
-
-          <p id="authError" role="status"></p>
-
-          <p class="fine">
-            This demo stores only a display name in this browser, never the
-            password. Not suitable for real user accounts.
-          </p>
-        </form>
-      </section>
-    </main>
-
-    <footer>
-      © VerdeAI · NASA POWER climate observations
-      <span>Decision-support prototype, not a replacement for agricultural advice.</span>
-    </footer>
-
-    <script type="module" src="/js/common.js"></script>
-    <script type="module" src="/js/auth.js"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Log in or sign up | VerdeAI</title>
+<link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<main class="auth">
+  <section class="auth-art">
+    <a class="brand" href="/"><img src="/img/logo.svg" alt="" width="38" height="38">VerdeAI<small>Malaysia</small></a>
+    <div>
+      <h1>Your farm, saved once. Better decisions every season.</h1>
+      <ul>
+        <li>Farm profile saved to your account</li>
+        <li>Live NASA rainfall, temperature and soil moisture</li>
+        <li>Rotation options with clear reasons</li>
+      </ul>
+    </div>
+    <p class="fine" style="color:#b9cce2">Satellite data and scores are estimates that support your decision.</p>
+  </section>
+  <section class="auth-panel">
+    <form id="loginForm" class="auth-card" novalidate>
+      <div class="tabs" role="tablist">
+        <button type="button" id="loginTab" role="tab" aria-selected="false">Log in</button>
+        <button type="button" id="signupTab" role="tab" aria-selected="true" class="selected">Sign up</button>
+      </div>
+      <h2 id="authHeading">Create your account</h2>
+      <label id="nameField">Full name<input id="authName" autocomplete="name" maxlength="80" placeholder="Siti Aminah"></label>
+      <label>Email<input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+      <label>Password<input id="authPassword" type="password" minlength="8" required autocomplete="new-password" placeholder="At least 8 characters"></label>
+      <button class="btn btn-primary" type="submit" id="authSubmit">Create account</button>
+      <p id="authError" class="form-error" role="alert" hidden></p>
+      <p class="fine">Passwords are hashed on the server and never stored as text.</p>
+    </form>
+  </section>
+</main>
+<script type="module" src="/js/pages/login.js"></script>
+</body>
 </html>

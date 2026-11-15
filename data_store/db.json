@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "id": "18c0e682-f1d6-4ed7-8805-0d554d193341",
+      "name": "amr",
+      "email": "amr@gmail.com",
+      "salt": "ca98e5a9e32235c7b60fb65ee2a890f5",
+      "hash": "78d63ee3a3f508ade6ab17fc8dd2039b02bbef17e8248e8a54bd527557a388d9679b24501ba41e1ca88c3961eb959de65a55f41dc35d18cde2f23bb78d436921",
+      "createdAt": "2026-11-15T02:14:11.712Z",
+      "farm": null,
+      "tasks": []
+    }
+  ]
+}
