@@ -46,6 +46,13 @@ export async function climate(req, res) {
 
 // Landing-page preview: fixed location (Kuantan, Pahang), real NASA data, no login needed.
 export async function snapshot(req, res) {
-    try { res.json(await getDaily(3.8077, 103.326, 45)); }
-    catch (e) { fail(res, e); }
+  try {
+    const [lat, lon] = coords(req);
+
+    const data = await getDaily(lat, lon, 45);
+
+    res.json(data);
+  } catch (e) {
+    fail(res, e);
+  }
 }
