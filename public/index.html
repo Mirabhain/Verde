@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VerdeAI | Crop rotation with NASA data for Malaysian farms</title>
+<meta name="description" content="Compare crop rotations for your Malaysian farm using NASA POWER climate and soil-moisture observations and an AI assistant.">
+<link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="hero" id="home">
+  <div class="site-nav">
+    <a class="brand" href="/"><img src="/img/logo.svg" alt="" width="38" height="38">VerdeAI<small>Malaysia</small></a>
+    <nav aria-label="Main">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a class="btn btn-primary btn-sm" href="/login" id="navCta">Log in / Sign up</a>
+    </nav>
+  </div>
+  <div class="hero-inner">
+    <div>
+      <h1> Be verdant with VerdeAI </h1>
+      <p class="lead"> Plan your agriculture habits NASAly with VerdeAI </p>
+      <div class="actions">
+        <a class="btn btn-primary" href="/login" id="heroCta">Start with my farm</a>
+        <a class="btn btn-ghost" href="#how">See how it works</a>
+      </div>
+    </div>
+    <aside class="readout" aria-label="Live NASA data preview">
+      <header><h2 id="locationName">Detecting your location...</h2><span class="live-dot" id="liveDot">Loading NASA data</span></header>
+      <div id="readoutBody"><div class="readout-grid"><div class="skeleton" style="height:64px;opacity:.3"></div><div class="skeleton" style="height:64px;opacity:.3"></div><div class="skeleton" style="height:64px;opacity:.3"></div><div class="skeleton" style="height:64px;opacity:.3"></div></div></div>
+    </aside>
+  </div>
+</header>
+
+<section class="facts" aria-label="What VerdeAI uses">
+  <ul>
+    <li><b>NASA POWER</b>daily records back to 1981</li>
+    <li><b>9 variables</b>rain, temperature, humidity, soil wetness and more</li>
+    <li><b>7 crops</b>Malaysian vegetables and field crops</li>
+    <li><b>AI assistant</b>explains results in plain language</li>
+  </ul>
+</section>
+
+<section class="band" id="how">
+  <div class="wrap split">
+    <figure class="photo"><img src="/img/farmer.jpg" alt="Malaysian farmer smiling among young oil palm seedlings" loading="lazy"><figcaption>Built around the farmer's own knowledge of the land</figcaption></figure>
+    <div>
+      <h2>From your farm to a clear plan</h2>
+      <p class="sub">Four steps, no spreadsheets, and you stay in charge of the decision.</p>
+      <ol class="steps">
+        <li><div><h3>Add your farm</h3><p>Drop a pin on the map, then enter land size, soil, fertiliser and what you grew.</p></div></li>
+        <li><div><h3>We read NASA data</h3><p>Rainfall, temperature, humidity and soil moisture for your exact coordinates, fetched live.</p></div></li>
+        <li><div><h3>Compare rotations</h3><p>See your current rotation and up to three alternatives, each with reasons, benefits and risks.</p></div></li>
+        <li><div><h3>Plan the season</h3><p>Use the calendar and the wet and dry month guide, and ask the assistant when something is unclear.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="band band-tint" id="features">
+  <div class="wrap">
+    <h2>What you get</h2>
+    <p class="sub">Everything uses real NASA observations and your own farm details.</p>
+    <div class="features">
+      <article class="feature"><div class="ico" aria-hidden="true">🛰️</div><h3>NASA analysis for your pin</h3><p>Rain, temperature, humidity, evaporation, solar radiation and soil wetness, with charts for the last 120 days and a ten-year typical year.</p></article>
+      <article class="feature"><div class="ico" aria-hidden="true">🔄</div><h3>Rotation comparison</h3><p>Your current rotation against three alternatives, each scored with the rules shown on the card.</p></article>
+      <article class="feature"><div class="ico" aria-hidden="true">💧</div><h3>Soil and water outlook</h3><p>Soil moisture from NASA plus a nutrient outlook from your crops and fertiliser. Honest about what needs a lab test.</p></article>
+      <article class="feature"><div class="ico" aria-hidden="true">📅</div><h3>Wet and dry months</h3><p>See when moisture-related disease or drought stress is more likely at your farm.</p></article>
+      <article class="feature"><div class="ico" aria-hidden="true">💬</div><h3>AI assistant</h3><p>Ask about pests, soil or your results. It knows your farm profile and NASA numbers.</p></article>
+    </div>
+    <div class="honest" style="margin-top:30px">
+      <div class="ico" aria-hidden="true">ℹ️</div>
+      <div><h3>A guide, not a replacement for your judgment</h3><p>Satellite data describes conditions for the area, not your exact plot, and scores are rule-based estimates. Confirm important planting decisions with <a href="https://www.doa.gov.my/" rel="noopener" target="_blank">Jabatan Pertanian Malaysia</a> or MARDI.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Ready to plan your next season?</h2>
+  <p>Create a free account, pin your farm and see what NASA says about it in minutes.</p>
+  <a class="btn btn-primary" href="/login">Create my farm profile</a>
+</section>
+
+<footer class="footer"><div class="wrap"><span>© VerdeAI · Data from NASA POWER</span><span>Decision support, not agricultural advice. See <a href="https://www.doa.gov.my/" rel="noopener" target="_blank">DOA Malaysia</a>.</span></div></footer>
+<script type="module" src="/js/pages/site.js"></script>
+</body>
+</html>

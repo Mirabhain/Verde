@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My farm | VerdeAI</title>
+<link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+</head>
+<body class="app">
+<div id="content">
+<div class="page-head">
+  <div><h1>My farm</h1><p>Tell VerdeAI about your land. Click the map to drop a pin: NASA data is fetched for that exact spot.</p></div>
+</div>
+<form id="farmForm" class="grid" novalidate>
+  <section class="panel">
+    <h2>Location</h2>
+    <div id="map" role="application" aria-label="Map: click to place your farm"></div>
+    <div class="form-grid" style="margin-top:16px">
+      <label>Farm name<input name="name" required maxlength="80" placeholder="Kebun Pak Mat, Kuantan"></label>
+      <label>State
+        <select name="state">
+          <option value="">Select state</option><option>Johor</option><option>Kedah</option><option>Kelantan</option><option>Melaka</option><option>Negeri Sembilan</option><option>Pahang</option><option>Perak</option><option>Perlis</option><option>Pulau Pinang</option><option>Sabah</option><option>Sarawak</option><option>Selangor</option><option>Terengganu</option><option>Kuala Lumpur</option><option>Putrajaya</option><option>Labuan</option>
+        </select>
+      </label>
+      <label>Latitude<input name="lat" type="number" step="any" min="-90" max="90" required placeholder="3.8077"></label>
+      <label>Longitude<input name="lon" type="number" step="any" min="-180" max="180" required placeholder="103.3260"></label>
+      <div class="full"><button class="btn btn-outline btn-sm" type="button" id="locateBtn">Use my current location</button></div>
+    </div>
+  </section>
+  <section class="panel">
+    <h2>Land and crops</h2>
+    <div class="form-grid">
+      <label>Land size (hectares)<input name="size" type="number" step="any" min="0.01" required placeholder="1.5"></label>
+      <label>Soil type
+        <select name="soil"><option value="">Not sure</option><option>Sandy</option><option>Sandy loam</option><option>Loam</option><option>Clay loam</option><option>Clay</option><option>Peat</option></select>
+      </label>
+      <label>Current crop<select name="crop" id="cropSelect" required></select></label>
+      <label>Previous crop<select name="previous" id="previousSelect"></select></label>
+      <label>Soil pH (if you tested it)<input name="ph" type="number" step="0.1" min="0" max="14" placeholder="Leave empty if unknown"></label>
+      <label>Irrigation
+        <select name="irrigation"><option>Rain-fed</option><option>Drip</option><option>Sprinkler</option><option>Furrow or canal</option></select>
+      </label>
+      <label>Fertiliser used
+        <select name="fertilizer"><option>None</option><option>Compost or manure</option><option>Chemical NPK</option><option>Chemical and organic</option></select>
+      </label>
+      <label>Crop care
+        <select name="care"><option>Low input</option><option>Moderate</option><option>Intensive</option><option>Organic</option></select>
+      </label>
+      <label class="full">Your main priority
+        <select name="goal"><option value="diversity">Diversify crops</option><option value="water">Save water</option><option value="nitrogen">Add nitrogen to the soil</option><option value="pest">Reduce pests and disease</option></select>
+      </label>
+    </div>
+  </section>
+  <div id="farmMessage" role="status"></div>
+  <div><button class="btn btn-primary" type="submit" id="saveFarmBtn">Save farm</button></div>
+</form>
+<script src="/vendor/leaflet/leaflet.js"></script>
+</div>
+<script src="/vendor/chart.umd.js"></script>
+<script type="module" src="/js/pages/farm.js"></script>
+</body>
+</html>

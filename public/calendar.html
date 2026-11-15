@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Farm calendar | VerdeAI</title>
+<link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app">
+<div id="content">
+<div class="page-head">
+  <div><h1>Farm calendar</h1><p>Plan activities, and see which months are usually wetter or drier at your farm.</p></div>
+</div>
+<div class="grid" style="grid-template-columns:1fr;gap:24px;align-items:start">
+  <section class="panel">
+    <h2>Add an activity</h2>
+    <form id="taskForm" class="task-form">
+      <label>Date<input type="date" name="date" required></label>
+      <label>Activity<input name="task" required maxlength="200" placeholder="Sow long bean, apply compost…"></label>
+      <button class="btn btn-primary" type="submit">Add</button>
+    </form>
+    <p id="taskMsg" class="form-error" hidden></p>
+    <div id="taskList" aria-live="polite"></div>
+  </section>
+<section class="panel">
+  <h2>Wet and dry months</h2>
+
+  <div class="risk-scroll">
+    <div id="riskBox">
+      <div class="skeleton" style="height:120px"></div>
+    </div>
+  </div>
+</section>
+</div>
+</div>
+<script src="/vendor/chart.umd.js"></script>
+<script type="module" src="/js/pages/calendar.js"></script>
+</body>
+</html>

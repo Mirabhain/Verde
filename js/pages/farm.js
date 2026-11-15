@@ -1,5 +1,0 @@
-import {CROPS} from '../../data/crops.js';import {getFarm,saveFarm} from '../storage.js';
-const form=document.querySelector('#farmForm');const farm=getFarm();
-for(const id of ['cropSelect','previousSelect'])document.getElementById(id).innerHTML=CROPS.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-for(const [key,value] of Object.entries(farm))if(form.elements.namedItem(key))form.elements.namedItem(key).value=value;
-form.addEventListener('submit',e=>{e.preventDefault();const d=Object.fromEntries(new FormData(form));const lat=Number(d.lat),lon=Number(d.lon),size=Number(d.size),ph=d.ph===''?'':Number(d.ph);if(!Number.isFinite(lat)||Math.abs(lat)>90||!Number.isFinite(lon)||Math.abs(lon)>180||!Number.isFinite(size)||size<=0||(ph!==''&&(!Number.isFinite(ph)||ph<0||ph>14))){document.querySelector('#farmMessage').textContent='Please check the farm values.';return;}saveFarm({...d,lat,lon,size,ph});document.querySelector('#farmMessage').textContent='Farm saved successfully. You can now open Crop Rotation or Weather Analysis.';});

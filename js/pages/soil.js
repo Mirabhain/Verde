@@ -1,2 +1,0 @@
-import {farm,cropName,escapeHTML} from './shared.js';
-document.querySelector('#soilDetails').innerHTML=`<h4>${escapeHTML(farm.name)}</h4><p><b>Reported soil type:</b> ${escapeHTML(farm.soil)}</p><p><b>Reported pH:</b> ${farm.ph===''?'Not provided':escapeHTML(farm.ph)}</p><p><b>Current crop:</b> ${escapeHTML(cropName(farm.crop))}</p><p><b>Fertilizer:</b> ${escapeHTML(farm.fertilizer)}</p><p><b>Soil N/P/K:</b> Unknown (laboratory test required)</p>`;

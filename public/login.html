@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Log in or sign up | VerdeAI</title>
+<link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<main class="auth">
+  <section class="auth-art">
+    <a class="brand" href="/"><img src="/img/logo.svg" alt="" width="38" height="38">VerdeAI<small>Malaysia</small></a>
+    <div>
+      <h1>Your farm, saved once. Better decisions every season.</h1>
+      <ul>
+        <li>Farm profile saved to your account</li>
+        <li>Live NASA rainfall, temperature and soil moisture</li>
+        <li>Rotation options with clear reasons</li>
+      </ul>
+    </div>
+    <p class="fine" style="color:#b9cce2">Satellite data and scores are estimates that support your decision.</p>
+  </section>
+  <section class="auth-panel">
+    <form id="loginForm" class="auth-card" novalidate>
+      <div class="tabs" role="tablist">
+        <button type="button" id="loginTab" role="tab" aria-selected="false">Log in</button>
+        <button type="button" id="signupTab" role="tab" aria-selected="true" class="selected">Sign up</button>
+      </div>
+      <h2 id="authHeading">Create your account</h2>
+      <label id="nameField">Full name<input id="authName" autocomplete="name" maxlength="80" placeholder="Siti Aminah"></label>
+      <label>Email<input id="authEmail" type="email" required autocomplete="email" placeholder="you@example.com"></label>
+      <label>Password<input id="authPassword" type="password" minlength="8" required autocomplete="new-password" placeholder="At least 8 characters"></label>
+      <button class="btn btn-primary" type="submit" id="authSubmit">Create account</button>
+      <p id="authError" class="form-error" role="alert" hidden></p>
+      <p class="fine">Passwords are hashed on the server and never stored as text.</p>
+    </form>
+  </section>
+</main>
+<script type="module" src="/js/pages/login.js"></script>
+</body>
+</html>
