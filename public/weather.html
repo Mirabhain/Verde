@@ -3,19 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NASA weather | VerdeAI</title>
+<title>Weather & Climate Analysis | VerdeAI</title>
 <link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
 <link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
 </head>
 <body class="app">
 <div id="content">
 <div class="page-head">
-  <div><h1>NASA weather</h1><p id="wxSub">Real observations from NASA POWER for your farm pin.</p></div>
-  <button class="btn btn-outline" type="button" id="refreshBtn">Refresh data</button>
+  <div><h1>Weather &amp; Climate Analysis</h1><p id="wxSub" class="muted">Gridded observations from NASA POWER and satellite data</p></div>
 </div>
-<div id="wxBody"><div class="skeleton" style="height:180px"></div></div>
+<!-- weather.js builds and fills everything in here -->
+<div id="weatherRoot"></div>
 </div>
 <script src="/vendor/chart.umd.js"></script>
+<script src="/vendor/leaflet/leaflet.js"></script>
 <script type="module" src="/js/pages/weather.js"></script>
 </body>
 </html>

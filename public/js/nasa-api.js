@@ -1,14 +1,13 @@
 /* VerdeAI browser helpers for NASA POWER, GIBS and the forecast and terrain routes. */
 
 const FARM_KEY = "verdeFarm"; // adapt to your farm storage once the farm profile page is finished
-const DEFAULT_FARM = { lat: 1.5535, lon: 110.3593, name: "Kuching" };
 
 export function getFarmLocation() {
   try {
     const f = JSON.parse(localStorage.getItem(FARM_KEY));
     if (f && Number.isFinite(f.lat) && Number.isFinite(f.lon)) return f;
   } catch {}
-  return DEFAULT_FARM;
+  return ;
 }
 
 async function getJSON(url) {
