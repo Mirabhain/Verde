@@ -1,13 +1,15 @@
 /* VerdeAI browser helpers for NASA POWER, GIBS and the forecast and terrain routes. */
 
-const FARM_KEY = "verdeFarm"; // adapt to your farm storage once the farm profile page is finished
+import { getFarm } from "./storage.js";
 
+// The pin the user saved on the Farm page (same storage as the dashboard).
+// Returns null when no valid location has been saved, so pages can ask the user to add their farm.
 export function getFarmLocation() {
-  try {
-    const f = JSON.parse(localStorage.getItem(FARM_KEY));
-    if (f && Number.isFinite(f.lat) && Number.isFinite(f.lon)) return f;
-  } catch {}
-  return ;
+  const f = getFarm();
+  if (!f || f.lat == null || f.lat === "" || f.lon == null || f.lon === "") return null;
+  const lat = Number(f.lat), lon = Number(f.lon);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) return null;
+  return { ...f, lat, lon };
 }
 
 async function getJSON(url) {

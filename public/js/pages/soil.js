@@ -247,7 +247,12 @@ function fillTable(soil) {
 async function init() {
   await ready; // adds the left sidebar and checks the login
   const farm = getFarmLocation();
-  $("soilSub").textContent = `Gridded NASA POWER & EOSDIS observations for ${farm.name || "Farm"} (${farm.lat.toFixed(4)}°N, ${farm.lon.toFixed(4)}°E)`;
+  if (!farm) {
+    $("soilSub").textContent = "Add your farm location to see soil, vegetation and terrain data for your pin.";
+    $("soilRoot").innerHTML = `<div class="empty"><h3>Add your farm to get started</h3><p>VerdeAI needs your farm location to read NASA data for your exact pin. Place the pin on the My Farm page, then come back here.</p><a class="btn btn-primary" href="/farm">Add my farm</a></div>`;
+    return;
+  }
+  $("soilSub").innerHTML = `NASA POWER & EOSDIS observations for <b>${esc(farm.name || "your farm")}</b> (${farm.lat.toFixed(4)}°, ${farm.lon.toFixed(4)}°) · <a href="/farm">Change location</a>`;
   renderLayout();
 
   const q = `lat=${farm.lat}&lon=${farm.lon}`;
