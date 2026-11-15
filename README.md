@@ -1,4 +1,4 @@
-# VerdeAI — AI-Powered Agricultural Decision Support
+# <img width="48" height="48" position="center" alt="logo" src="https://github.com/user-attachments/assets/78b0186c-aa0d-468a-8670-5cf175a45fc3" /> VerdeAI — AI-Powered Agricultural Decision Support
 
 **Live Website:** [https://verdeai-x3ls.onrender.com/](https://verdeai-x3ls.onrender.com/)
 
@@ -9,9 +9,9 @@ VerdeAI is a web-based agricultural assistant prototype designed to help Malaysi
 
 This project is a **prototype for demonstration and learning**, not a production-ready farm management system. Some analyses are calculated or estimated from available inputs and should not be treated as field measurements or professional agronomic advice.
 
-## Features and Screenshots
+[Jump here to run our verdantly amazing project!](#Requirements)
 
-> **Screenshot setup:** Save your screenshots in a `screenshots/` folder at the repository root, using the filenames shown below. Replace or remove sections that are not present in your current build. Images will appear automatically on GitHub once the files are committed.
+# Features Available
 
 ### 1. Home Page
 
@@ -42,7 +42,7 @@ View soil wetness, rainfall, evaporation and water-balance indicators to support
 
 Review forecast conditions and terrain indicators, including elevation and estimated slope, where the external provider is available. Forecast and elevation requests use Open-Meteo in the current backend code.
 
-![Forecast and terrain information](screenshots/forecast-terrain.png)
+<img width="400" height="213" alt="Weather__Climate_Analysis___VerdeAI_-_Google_Chrome_2026-11-15_21-30-09" src="https://github.com/user-attachments/assets/251cd8ff-5beb-43ab-bb9d-ecb73e544515" />
 
 ### 6. Crop Rotation Recommendations
 
@@ -66,7 +66,7 @@ Ask agriculture-related questions using the AI assistant. The backend integrates
 
 View charts and timelines for available agricultural and climate data. The exact charts shown depend on the features implemented in the current version.
 
-![Data visualisation dashboard](screenshots/data-visualisation.png)
+<img width="400" height="213" alt="Weather__Climate_Analysis___VerdeAI_-_Google_Chrome_2026-11-15_21-30-09" src="https://github.com/user-attachments/assets/251cd8ff-5beb-43ab-bb9d-ecb73e544515" />
 
 ## Technology Stack
 
