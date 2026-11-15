@@ -1,0 +1,9 @@
+id,crop_name,family,relative_water_category,relative_nitrogen_category,validation_status
+chili,Chili,Solanaceae,medium,high,illustrative; verify with DOA/MARDI
+longbean,Long bean,Fabaceae,medium,low,illustrative; verify with DOA/MARDI
+mustard,Mustard greens,Brassicaceae,medium,medium,illustrative; verify with DOA/MARDI
+corn,Corn,Poaceae,high,high,illustrative; verify with DOA/MARDI
+groundnut,Groundnut,Fabaceae,low,low,illustrative; verify with DOA/MARDI
+cucumber,Cucumber,Cucurbitaceae,high,medium,illustrative; verify with DOA/MARDI
+okra,Okra,Malvaceae,medium,medium,illustrative; verify with DOA/MARDI
+rice,Rice,Poaceae,high,high,illustrative; verify with DOA/MARDI
