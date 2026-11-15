@@ -1,24 +1,22 @@
+
+import "dotenv/config";
+
 import express from "express";
-import dotenv from "dotenv";
 import webRoutes from "./routes/web.js";
 import apiRoutes from "./routes/api.js";
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json({ limit: "20kb" }));
 
-// Static Assets
+// Frontend static files
 app.use(express.static("public"));
-app.use("/css", express.static("css"));
-app.use("/data", express.static("data"));
 
-// Backend API Routes
+// Backend API
 app.use("/api", apiRoutes);
 
-// Frontend Page Routing
+// Frontend routes
 app.use("/", webRoutes);
 
 const server = app.listen(PORT, () => {

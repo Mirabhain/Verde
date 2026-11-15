@@ -43,53 +43,58 @@
           <a class="nav-btn" href="/calendar">▣ Farm Calendar</a>
         </aside>
 
-        <div class="content">
-          <section class="page active">
-            <h3>Farm overview</h3>
-            <p class="muted" id="dashboardFarm"></p>
+        
+<div class="content">
+    <section class="page active">
+        <h3>Farm overview</h3>
+        <p class="muted" id="dashboardFarm"></p>
 
-            <div class="stat-grid">
-              <article class="panel">
+        <div class="stat-grid">
+            <article class="panel">
                 <h4>NASA weather</h4>
-                <div id="weatherSummary">Fetch NASA data in Weather Analysis.</div>
-              </article>
+                <div id="weatherSummary">
+                    Fetch NASA data in Weather Analysis.
+                </div>
+            </article>
 
-              <article class="panel">
+            <article class="panel">
                 <h4>Farm details</h4>
                 <div id="farmSummary"></div>
-              </article>
+            </article>
 
-              <article class="panel">
+            <article class="panel">
                 <h4>Suggested next step</h4>
                 <p>
-                  Update your farm details, retrieve NASA observations, then
-                  compare crop rotations.
+                    Update your farm details, retrieve NASA observations,
+                    then compare crop rotations.
                 </p>
                 <a class="secondary" href="/rotation">Compare crops</a>
-              </article>
+            </article>
+        </div>
 
-              <div class="chat-container">
+        <!-- VerdeAI Chatbot -->
+        <section class="panel chat-container">
+            <h3>Ask VerdeAI</h3>
 
-              <div id="chatMessages">
-                  <div class="message assistant">
-                      Salam! I'm CropWise AI. How can I help with your farm today?
-                  </div>
-              </div>
+            <div id="chatMessages">
+                <div class="message assistant">
+                    Salam! I'm VerdeAI. How can I help with your farm today?
+                </div>
+            </div>
 
-              <form id="chatForm">
-                  <input
-                      type="text"
-                      id="chatInput"
-                      placeholder="Ask about crop rotation..."
-                      required
-                  />
+            <form id="chatForm">
+                <input
+                    type="text"
+                    id="chatInput"
+                    placeholder="Ask about crop rotation..."
+                    required
+                />
 
-                  <button type="submit">Send</button>
-              </form>
-
-          </div>
-
-          <script src="/js/chat.js" defer></script>
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </section>
+</div>
             </div>
           </section>
         </div>
@@ -103,5 +108,6 @@
 
     <script type="module" src="/js/common.js"></script>
     <script type="module" src="/js/pages/dashboard.js"></script>
+    <script src="/js/chat.js" defer></script>
   </body>
 </html>

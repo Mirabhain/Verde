@@ -1,17 +1,13 @@
-import OpenAI from "openai";
-import dotenv from "dotenv";
 
-dotenv.config();
+import Groq from "groq-sdk";
 
-const apiKey = (process.env.OPENAI_API_KEY || "").trim();
-
-const openai = new OpenAI({
-    apiKey: apiKey
+const groq = new Groq({
+    apiKey: process.env.GROQ_API_KEY
 });
 
-// VerdeAI AI instructions
+// VerdeAI system instructions
 const SYSTEM_INSTRUCTIONS = `
-You are VerdeAI AI, an agricultural assistant specialising
+You are VerdeAI, an agricultural assistant specialising
 in Malaysian crop cultivation and crop rotation.
 
 Your responsibilities:
@@ -34,25 +30,45 @@ Guidelines:
 
 export async function chat(req, res) {
     try {
-        const { message, farmContext, history = [] } = req.body;
+        const { message, farmContext, history = [] } = req.body || {};
 
+        // Validate user message
         if (!message || typeof message !== "string") {
             return res.status(400).json({
                 error: "Please provide a valid message."
             });
         }
 
-        // Keep the conversation history manageable
+        // Check API key
+        if (!process.env.GROQ_API_KEY) {
+            return res.status(500).json({
+                error: "Groq API key is missing. Check your .env file."
+            });
+        }
+
+        // Keep only valid conversation messages
         const recentHistory = Array.isArray(history)
-            ? history.slice(-10)
+            ? history
+                .filter(item =>
+                    ["user", "assistant"].includes(item.role) &&
+                    typeof item.content === "string"
+                )
+                .slice(-10)
             : [];
 
-        // Construct the conversation
-        const conversation = [
+        // Include current farm information
+        const systemMessage = `
+${SYSTEM_INSTRUCTIONS}
+
+Current farm information:
+${JSON.stringify(farmContext || {}, null, 2)}
+`;
+
+        // Construct Groq conversation
+        const messages = [
             {
-                role: "user",
-                content: `Farm information:
-                ${JSON.stringify(farmContext || {})}`
+                role: "system",
+                content: systemMessage
             },
             ...recentHistory,
             {
@@ -61,21 +77,34 @@ export async function chat(req, res) {
             }
         ];
 
-        const response = await openai.responses.create({
-            model: process.env.OPENAI_MODEL || "gpt-5.5",
-            instructions: SYSTEM_INSTRUCTIONS,
-            input: conversation
+        // Request Groq response
+        const completion = await groq.chat.completions.create({
+            model: process.env.GROQ_MODEL || "openai/gpt-oss-120b",
+            messages
         });
 
-        res.json({
-            reply: response.output_text
+        const reply = completion.choices?.[0]?.message?.content;
+
+        if (!reply) {
+            throw new Error("Groq returned an empty response.");
+        }
+
+        return res.json({
+            reply
         });
 
     } catch (error) {
-        console.error("OpenAI API error:", error);
+        console.error("Groq API error:", {
+            message: error.message,
+            status: error.status,
+            code: error.code,
+            type: error.type
+        });
 
-        res.status(500).json({
-            error: "Unable to generate a response. Please try again."
+        return res.status(error.status || 500).json({
+            error: process.env.NODE_ENV === "development"
+                ? error.message
+                : "Unable to generate a response. Please try again."
         });
     }
 }
