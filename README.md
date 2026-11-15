@@ -2,6 +2,8 @@
 
 **Live Website:** [https://verdeai-x3ls.onrender.com/](https://verdeai-x3ls.onrender.com/)
 
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
+
 > **Be Verdant with VerdeAI.**  
 > *Smarter Decisions. Greener Harvests.*
 
@@ -9,7 +11,7 @@ VerdeAI is a web-based agricultural assistant prototype designed to help Malaysi
 
 This project is a **prototype for demonstration and learning**, not a production-ready farm management system. Some analyses are calculated or estimated from available inputs and should not be treated as field measurements or professional agronomic advice.
 
-[Jump here to run our verdantly amazing project!](#Requirements)
+[Jump here to run our _verdantly_ amazing project!](#Requirements)
 
 # Features Available
 
@@ -72,25 +74,26 @@ View charts and timelines for available agricultural and climate data. The exact
 
 | Layer | Technology |
 |---|---|
-| Frontend | HTML, CSS, JavaScript |
-| Backend | Node.js, Express.js |
-| AI integration | Groq API |
-| Historical climate and soil indicators | NASA POWER API |
-| Weather forecast and elevation | Open-Meteo API |
-| Vegetation data attempt | NASA ORNL DAAC MODIS subset API |
-| Prototype storage | Browser LocalStorage; SessionStorage where used |
+| Frontend | ![HTML5](https://img.shields.io/badge/HTML5-HTML-E34F26?logo=html5) ![CSS3](https://img.shields.io/badge/CSS3-CSS-1572B6?logo=css3) ![JavaScript](https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript) |
+| Backend | ![Node.js](https://img.shields.io/badge/Node.js-Runtime-339933?logo=nodedotjs) ![Express](https://img.shields.io/badge/Express-Framework-000000?logo=express) |
+| AI Integration | Groq API |
+| Historical Climate and Soil Indicators | NASA POWER API |
+| Weather Forecast and Elevation | Open-Meteo API |
+| Vegetation Data Attempt | NASA ORNL DAAC MODIS Subset API |
+| Prototype Storage | Browser LocalStorage; SessionStorage where used |
 | Deployment | Render |
 
 ## External API Integration
 
-| Provider / endpoint | Purpose | Notes |
+| Provider / Endpoint | Purpose | Notes |
 |---|---|---|
-| NASA POWER daily point API | Historical temperature, precipitation, humidity, soil wetness, evaporation, solar radiation | No API key required |
-| NASA POWER monthly point API | Monthly climate summaries and seasonal patterns | No API key required |
-| Open-Meteo forecast API | Short-term temperature and rainfall forecast | Subject to provider rate limits |
-| Open-Meteo elevation API | Elevation samples used for terrain and slope estimates | Subject to provider rate limits |
-| NASA ORNL DAAC MODIS subset API | Attempts to retrieve NDVI/EVI observations | Availability depends on requested data |
-| Groq API | AI-powered agricultural assistance | Requires a private API key |
+| ![NASA](https://img.shields.io/badge/NASA-POWER-E03C31?logo=nasa) Daily Point API | Historical temperature, precipitation, humidity, soil wetness, evaporation, and solar radiation | No API key required |
+| ![NASA](https://img.shields.io/badge/NASA-POWER-E03C31?logo=nasa) Monthly Point API | Monthly climate summaries and seasonal patterns | No API key required |
+| ![Open-Meteo](https://img.shields.io/badge/Open--Meteo-Weather-0284C7) Forecast API | Short-term temperature and rainfall forecasts | Subject to provider rate limits |
+| ![Open-Meteo](https://img.shields.io/badge/Open--Meteo-Weather-0284C7) Elevation API | Elevation samples used for terrain and slope estimates | Subject to provider rate limits |
+| NASA ORNL DAAC MODIS Subset API | Attempts to retrieve NDVI/EVI observations | Availability depends on requested data |
+| ![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-Maps-7EBC6F?logo=openstreetmap) | Provides map tiles for geographical visualization | Attribution required: © OpenStreetMap contributors |
+| ![Groq](https://img.shields.io/badge/Groq-AI-000000) | AI-powered agricultural assistance | Requires a private API key; keep it secure |
 
 **Data transparency:** NASA POWER provides gridded climate estimates rather than on-farm sensor measurements. Terrain slope, heat-stress categories, water-balance summaries and crop recommendations are derived by VerdeAI. The current vegetation module may use model-estimated or hardcoded fallback NDVI/EVI values if satellite retrieval fails; these must not be represented as measured satellite observations.
 
@@ -117,9 +120,9 @@ Add new endpoints to the existing `routes/api.js` where appropriate to preserve 
 
 Install the following before running the project:
 
-- Node.js and npm
-- Git
-- Visual Studio Code (recommended)
+- ![Node.js](https://img.shields.io/badge/Node.js-Runtime-339933?logo=nodedotjs)
+- ![Git](https://img.shields.io/badge/Git-Version_Control-F05032?logo=git)
+- ![VS Code](https://img.shields.io/badge/VS_Code-Editor-007ACC?logo=visualstudiocode) (recommended)
 - Internet connection for external API requests
 
 ## Installation
