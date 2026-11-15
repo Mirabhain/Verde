@@ -1,4 +1,5 @@
-import { getWeather, getSoil, getWaterTrend, getTerrain, getVegetation } from "../services/nasaServices.js";
+import { getWeather, getSoil, getWaterTrend, getTerrain, getVegetation, getForecast } from "../services/nasaServices.js";
+import { getDaily, getClimate } from "../services/nasaPower.js";
 
 function parse(req, res, maxDays = 365) {
     const lat = parseFloat(req.query.lat);
@@ -26,3 +27,25 @@ export const soil = handler(getSoil, 14, 90);
 export const waterTrend = handler(getWaterTrend, 90, 365);
 export const terrain = handler(getTerrain);
 export const vegetation = handler(getVegetation);
+export const forecast = handler((lat, lon) => getForecast(lat, lon, 7));
+
+// ---- Routes used by dashboard, rotation, calendar, chat and the landing page ----
+const coords = (req) => [Number(req.query.lat), Number(req.query.lon)];
+const fail = (res, e) =>
+    res.status(e.status && e.status >= 400 && e.status < 600 ? (e.status === 422 ? 502 : e.status) : 502).json({ error: e.message });
+
+export async function daily(req, res) {
+    try { const [lat, lon] = coords(req); res.json(await getDaily(lat, lon)); }
+    catch (e) { fail(res, e); }
+}
+
+export async function climate(req, res) {
+    try { const [lat, lon] = coords(req); res.json(await getClimate(lat, lon)); }
+    catch (e) { fail(res, e); }
+}
+
+// Landing-page preview: fixed location (Kuantan, Pahang), real NASA data, no login needed.
+export async function snapshot(req, res) {
+    try { res.json(await getDaily(3.8077, 103.326, 45)); }
+    catch (e) { fail(res, e); }
+}

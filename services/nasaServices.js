@@ -533,18 +533,5 @@ export async function getVegetation(lat, lon) {
 }
 
 
-// Backward-compatible alias for chatController and legacy consumers
-export async function getDaily(lat, lon, days = 14) {
-  const w = await getWeather(lat, lon, days);
-  return {
-    source: "NASA POWER daily agroclimatology",
-    lat,
-    lon,
-    elevationM: w.location.elevationM,
-    fetchedAt: w.fetchedAt,
-    records: w.daily,
-    summary: w.summary,
-  };
-}
-   export { getWeather, getSoil, getTerrain, getForecast };
+export { getWeather, getSoil, getTerrain, getForecast };
 

@@ -1,188 +1,21 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Weather & Climate Analysis | VerdeAI</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  </head>
-
-  <body>
-    <header class="topbar">
-      <a class="brand" href="/">
-        <img class="logo" src="img/logo.svg" alt="" width="40" height="40">
-        <b>VerdeAI</b>
-        <small>Malaysia Edition</small>
-      </a>
-
-      <nav>
-        <a href="/">Home</a>
-        <a href="/dashboard">Dashboard</a>
-        <a href="/farm">My Farm</a>
-        <a href="/weather">Weather</a>
-        <a href="/soil">Soil & Water</a>
-        <a href="/rotation">Crop Rotation</a>
-      </nav>
-    </header>
-
-    <main class="section workspace">
-      <div class="workspace-heading">
-        <div>
-          <span class="eyebrow">NASA AGROCLIMATOLOGY INTEGRATION</span>
-          <h2>Weather & Climate Analysis</h2>
-          <p class="muted" id="wxSub">Gridded observations from NASA POWER & Satellite Data</p>
-        </div>
-
-        <span id="userStatus" class="muted">Local demo session</span>
-      </div>
-
-      <div class="layout">
-        <aside class="sidebar">
-          <a class="nav-btn" href="/dashboard">▦ Dashboard</a>
-          <a class="nav-btn" href="/farm">⌖ My Farm</a>
-          <a class="nav-btn" href="/rotation">↻ Crop Rotation</a>
-          <a class="nav-btn" href="/soil">◈ Soil & Water</a>
-          <a class="nav-btn active" href="/weather">☁ Weather Analysis</a>
-          <a class="nav-btn" href="/calendar">▣ Farm Calendar</a>
-          <a class="nav-btn" href="/verdeai">◕ VerdeAI</a>
-        </aside>
-
-        <div class="content">
-          <!-- ADDED: shows any data loading errors -->
-          <div id="weatherErrors"></div>
-
-          <!-- Primary NASA Agro-weather Metrics -->
-          <div class="stat-grid" id="nasaMetrics">
-            <div class="panel-card"><div class="skeleton" style="height:70px"></div></div>
-            <div class="panel-card"><div class="skeleton" style="height:70px"></div></div>
-            <div class="panel-card"><div class="skeleton" style="height:70px"></div></div>
-            <div class="panel-card"><div class="skeleton" style="height:70px"></div></div>
-            <div class="panel-card"><div class="skeleton" style="height:70px"></div></div>
-            <div class="panel-card"><div class="skeleton" style="height:70px"></div></div>
-          </div>
-
-          <!-- Heat Stress Analysis Panel -->
-          <section class="panel" id="heatStressPanel" style="margin-bottom:20px">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px">
-              <div>
-                <h3 style="font-size:20px;margin:0 0 4px 0">Crop Heat Stress Analysis</h3>
-                <p class="muted" style="font-size:14px">Thermal stress index calculated from daily maximum temperatures and relative humidity (NOAA/Rothfusz & THI models).</p>
-              </div>
-              <div id="heatStressBadge"></div>
-            </div>
-            
-            <div class="stat-grid" id="heatStressStats" style="margin-bottom:14px"></div>
-
-            <div id="heatStressAdvisory"></div>
-
-            <div style="margin-top:16px;height:240px">
-              <canvas id="heatChart" aria-label="Heat Stress & Temperature Chart"></canvas>
-            </div>
-          </section>
-
-          <!-- Daily Rainfall & Evaporation Water Balance Chart -->
-          <section class="panel" style="margin-bottom:20px">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
-              <div>
-                <h3 style="font-size:20px;margin:0 0 4px 0">Rainfall vs Evaporation (Water Balance)</h3>
-                <p class="muted" style="font-size:14px">Daily precipitation against land surface evaporation (NASA POWER EVLAND).</p>
-              </div>
-              <div id="waterBalanceBadge"></div>
-            </div>
-            <div style="height:260px">
-              <canvas id="waterChart" aria-label="Rainfall vs Evaporation Chart"></canvas>
-            </div>
-          </section>
-
-          <!-- ADDED: humidity and solar radiation chart -->
-          <section class="panel" style="margin-bottom:20px">
-            <div style="margin-bottom:12px">
-              <h3 style="font-size:20px;margin:0 0 4px 0">Humidity & Solar Radiation</h3>
-              <p class="muted" style="font-size:14px">Daily mean relative humidity and surface solar radiation (NASA POWER).</p>
-            </div>
-            <div style="height:240px">
-              <canvas id="chartHum" aria-label="Humidity and Solar Radiation Chart"></canvas>
-            </div>
-          </section>
-
-          <!-- 14-day Observation Table -->
-          <section class="panel" style="margin-bottom:20px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <h3 style="font-size:20px;margin:0">Daily Observations (Last 14 Days)</h3>
-              <span class="fine" id="tableDateRange"></span>
-            </div>
-            <div style="overflow-x:auto">
-              <table class="data-table" id="weatherTable">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Avg Temp</th>
-                    <th>Min / Max</th>
-                    <th>Rainfall</th>
-                    <th>Evaporation</th>
-                    <th>Net Balance</th>
-                    <th>Humidity</th>
-                    <th>Heat Index</th>
-                    <th>Heat Stress</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-            <p class="fine" id="weatherNote" style="margin-top:10px"></p>
-          </section>
-
-          <!-- ADDED: 7-day forecast table -->
-          <section class="panel" style="margin-bottom:20px">
-            <div style="margin-bottom:12px">
-              <h3 style="font-size:20px;margin:0 0 4px 0">Forecast (Next 7 Days)</h3>
-              <p class="muted" style="font-size:14px">Short range forecast from Open-Meteo. NASA POWER does not provide forecasts.</p>
-            </div>
-            <div style="overflow-x:auto">
-              <table class="data-table" id="forecastTable">
-                <thead>
-                  <tr>
-                    <th>Date</th>
-                    <th>Min / Max</th>
-                    <th>Rainfall</th>
-                    <th>Rain Chance</th>
-                  </tr>
-                </thead>
-                <tbody></tbody>
-              </table>
-            </div>
-          </section>
-
-          <!-- Satellite View & Vegetation Health -->
-          <section class="panel">
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:12px">
-              <div>
-                <h3 style="font-size:20px;margin:0 0 4px 0">NASA EOSDIS Satellite View & Vegetation Health</h3>
-                <p class="muted" style="font-size:14px">MODIS Terra satellite imagery and 8-day NDVI/EVI vegetation health layers from NASA GIBS.</p>
-              </div>
-              <div id="terrainQuickBadge"></div>
-            </div>
-            <div id="map" class="nasa-map"></div>
-          </section>
-
-          <!-- ADDED: exact JSON returned by the APIs -->
-          <details class="panel" style="margin-top:20px">
-            <summary>Raw API response</summary>
-            <pre id="rawJson" class="raw-json"></pre>
-          </details>
-        </div>
-      </div>
-    </main>
-
-    <footer>
-      © VerdeAI · Powered by NASA POWER Agroclimatology & EOSDIS GIBS
-      <span>Decision-support prototype for Malaysian agriculture.</span>
-    </footer>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-    <script type="module" src="/js/common.js"></script>
-    <script type="module" src="/js/pages/weather.js"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NASA weather | VerdeAI</title>
+<link rel="icon" type="image/svg+xml" href="/img/logo-color.svg">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="app">
+<div id="content">
+<div class="page-head">
+  <div><h1>NASA weather</h1><p id="wxSub">Real observations from NASA POWER for your farm pin.</p></div>
+  <button class="btn btn-outline" type="button" id="refreshBtn">Refresh data</button>
+</div>
+<div id="wxBody"><div class="skeleton" style="height:180px"></div></div>
+</div>
+<script src="/vendor/chart.umd.js"></script>
+<script type="module" src="/js/pages/weather.js"></script>
+</body>
 </html>

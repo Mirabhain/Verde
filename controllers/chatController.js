@@ -1,6 +1,6 @@
 import Groq from "groq-sdk";
 import { readDb } from "../lib/db.js";
-import { getDaily } from "../services/nasaServices.js";
+import { getDaily } from "../services/nasaPower.js";
 
 let client;
 function groq() {

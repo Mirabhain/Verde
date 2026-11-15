@@ -24,6 +24,8 @@ export const getWeather = (lat, lon, days = 14) => getJSON(`/api/weather?lat=${l
 export const getSoil = (lat, lon, days = 14) => getJSON(`/api/soil?lat=${lat}&lon=${lon}&days=${days}`);
 export const getForecast = (lat, lon) => getJSON(`/api/forecast?lat=${lat}&lon=${lon}`);
 export const getTerrain = (lat, lon) => getJSON(`/api/terrain?lat=${lat}&lon=${lon}`);
+export const getWaterTrend = (lat, lon, days = 90) => getJSON(`/api/water-trend?lat=${lat}&lon=${lon}&days=${days}`);
+export const getVegetation = (lat, lon) => getJSON(`/api/vegetation?lat=${lat}&lon=${lon}`);
 
 export const shortDate = (s) => `${s.slice(6, 8)}/${s.slice(4, 6)}`; // POWER format YYYYMMDD
 export const show = (v, unit = "", digits = 1) => (v == null ? "n/a" : `${(+v).toFixed(digits)}${unit}`);
