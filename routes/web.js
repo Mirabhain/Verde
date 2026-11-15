@@ -25,7 +25,9 @@ const pages = {
     "/soil": "soil.html",
     "/soil.html": "soil.html",
     "/weather": "weather.html",
-    "/weather.html": "weather.html"
+    "/weather.html": "weather.html",
+    "/verdeai": "verdeai.html",
+    "/verdeai.ai": "verdeai.html"
 };
 
 // Register page routes
