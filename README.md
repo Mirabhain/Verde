@@ -17,25 +17,26 @@ This project is a **prototype for demonstration and learning**, not a production
 
 The landing page introduces VerdeAI, its main agricultural decision-support features, and a quick overview of climate information for the selected location.
 
-![VerdeAI home page](screenshots/home.png)
+<img width="400" height="213" alt="Dashboard___VerdeAI_-_Google_Chrome_2026-11-15_21-29-27" src="https://github.com/user-attachments/assets/f42da689-81cb-46f8-bd45-5115dec7f3be" />
 
 ### 2. Farm Profile and Management
 
 Users can enter and manage basic farm details to personalise their experience. Prototype farm information is stored in the browser.
 
-![Farm management page](screenshots/farm-profile.png)
+<img width="400" height="213" alt="My_farm___VerdeAI_-_Google_Chrome_2026-11-15_21-29-47" src="https://github.com/user-attachments/assets/b32627f9-64e7-46e6-bc02-ded3d133cfaf" />
 
 ### 3. Weather and Climate Dashboard
 
 Explore historical weather observations and summaries, including temperature, rainfall, humidity, evaporation and related agricultural indicators. Historical climate data is sourced from NASA POWER.
 
-![Weather dashboard](screenshots/weather-dashboard.png)
+<img width="400" height="213" alt="Weather__Climate_Analysis___VerdeAI_-_Google_Chrome_2026-11-15_21-30-09" src="https://github.com/user-attachments/assets/251cd8ff-5beb-43ab-bb9d-ecb73e544515" />
 
 ### 4. Soil and Water Monitoring
 
 View soil wetness, rainfall, evaporation and water-balance indicators to support farm planning. NASA POWER values represent gridded estimates, not physical sensors installed on a farm.
 
-![Soil and water monitoring](screenshots/soil-monitoring.png)
+
+<img width="400" height="213" alt="Soil__Water_Analysis___VerdeAI_-_Google_Chrome_2026-11-15_21-21-14" src="https://github.com/user-attachments/assets/cdd5b07a-2c93-4cb8-af9c-3ced5a0ccfdd" />
 
 ### 5. Weather Forecast and Terrain
 
@@ -47,19 +48,19 @@ Review forecast conditions and terrain indicators, including elevation and estim
 
 Explore crop rotation suggestions to support planning based on available agricultural information. Recommendations are decision-support outputs and should be checked against local agronomic conditions.
 
-![Crop rotation recommendations](screenshots/crop-rotation.png)
+<img width="400" height="213" alt="Crop_rotation___VerdeAI_-_Google_Chrome_2026-11-15_21-32-08" src="https://github.com/user-attachments/assets/5fc4be96-54ea-4452-ba3b-f47712366cce" />
 
 ### 7. Farm Calendar and Risk Planning
 
 Organise farm activities and explore wet/dry periods, seasonal risks and crop-planning timelines where implemented in the current build.
 
-![Farm calendar](screenshots/farm-calendar.png)
+<img width="400" height="213" alt="Farm_calendar___VerdeAI_-_Google_Chrome_2026-11-15_21-32-39" src="https://github.com/user-attachments/assets/135538cd-b91d-483a-a591-32f65ceeb2f4" />
 
 ### 8. AI Agricultural Assistant
 
 Ask agriculture-related questions using the AI assistant. The backend integrates with the Groq API when a valid `GROQ_API_KEY` is configured.
 
-![AI agricultural assistant](screenshots/ai-assistant.png)
+<img width="400" height="213" alt="Weather__Climate_Analysis___VerdeAI_-_Google_Chrome_2026-11-15_21-30-54" src="https://github.com/user-attachments/assets/6eddb240-8229-42c0-9869-355f5b52fc53" />
 
 ### 9. Data Visualisation and Trends
 
